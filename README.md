@@ -49,9 +49,13 @@ The Shopify GitHub integration deploys `main` to the connected theme, and theme 
 | Metaobject | Glaze (`glaze`) | `name` single line text (required), `colour` colour (required), `finish` single line text (Gloss, Satin, Matte), `pattern_image` file, images only (optional) | `pb-glaze-accent` | Created |
 | Variant metafield | `custom.glaze` | Metaobject reference → Glaze, one entry | `pb-glaze-accent` | Created |
 | Product option | Colour | Plain text (Celadon, Tenmoku, …). Not linked to a metafield. | Horizon variant picker | Created on test product |
-| Metaobject | Plant care (`plant_care`) | Botanical name, light, water, humidity, pet safe, difficulty | `pb-care-label` | Planned |
-| Product metafield | `custom.care` | Metaobject reference → Plant care | `pb-care-label` | Planned |
-| Product metafield | `custom.live_plant` | True or false | `cart-live-plant-notice` | Planned |
+| Metaobject | Plant care (`plant_care`) | `botanical_name` single line text (required); `light`, `water`, `humidity`, `difficulty` single line text with preset choices (required); `pet_safe` single line text with preset choices (optional: blank means unknown) | `pb-care-label` | Planned |
+| Product metafield | `custom.care` | Metaobject reference → Plant care, one entry | `pb-care-label` | Planned |
+| Product metafield | `custom.live_plant` | True or false. Ticked on plants only; unticked counts as false. | `cart-live-plant-notice` | Planned |
+| Product type | `Indoor plant`, `Pot`, `Potting mix & fertiliser` | Drives the 3 automated collections | Collections | Planned |
+| Collections | `indoor-plants`, `pots-planters`, `potting-mix-fertiliser` | Automated: product type is equal to … | Navigation, collection pages | Planned |
+
+Values and the full catalogue are in [docs/admin-setup.md](docs/admin-setup.md#catalogue-and-plant-care).
 
 ## Overrides of Dwell core files
 
@@ -104,6 +108,26 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 - **Decision:** private. Grant read access to reviewers on request.
 - **Reason:** it respects the licence. This isn't legal advice.
 
+### D6. Plant care data model
+
+- **Options:**
+  - six product metafields, or one `plant_care` metaobject referenced by `custom.care`;
+  - choice values stored as display text, or as keys that the theme maps to locale strings;
+  - pet safety as True or false, or as text with preset choices.
+- **Trade-offs:**
+  - Plants and care entries are 1:1 today, so product metafields would work. A metaobject groups the care fields in one definition and needs only one reference per product.
+  - Keys plus locale strings keep wording in code, but every new choice would need a deploy. Display text with preset choices still gives consistent tags, and the metaobject's translations cover other languages.
+  - True or false is a checkbox in admin, so "never set" and "unticked" look the same, and that can't express "unknown". Optional text with two choices makes blank mean unknown.
+- **Decision:** a `plant_care` metaobject. Choice values are display text. Pet safety is optional text: "Non-toxic to cats and dogs" or "Toxic to cats and dogs".
+- **Reason:** it's the simplest model that keeps tags consistent and never shows a pet-safety claim we haven't checked. The wording matches the ASPCA list, which says "non-toxic", not "safe".
+
+### D7. Collection rules
+
+- **Options:** manual collections, automated by tag, automated by product type, or automated by the `custom.live_plant` metafield (Shopify supports True or false metafield conditions).
+- **Trade-offs:** manual collections drift as products are added. Tags are free text and easy to mistype. Product type gives each product exactly one category, so the same rule works for all 3 collections. The `live_plant` flag would only cover plants, and it duplicates the product type for plants. That's accepted because it states the shipping rule directly; a data check in `docs/admin-setup.md` catches a plant left unticked.
+- **Decision:** automated by product type. `live_plant` stays a separate flag for the cart notice.
+- **Reason:** one consistent rule, and the business rule (live plants) stays explicit rather than inferred from a type string in Liquid.
+
 ### Spelling exceptions
 
 Our identifiers use Australian spelling. American spelling appears only where an external API requires it.
@@ -112,9 +136,21 @@ Our identifiers use Australian spelling. American spelling appears only where an
 |---|---|---|
 | *None yet* | | |
 
+## Image credits
+
+Product images are 4:5 portrait, from Unsplash or Pexels.
+
+| Product | Source URL | Photographer | Licence |
+|---|---|---|---|
+| *None yet* | | | |
+
 ## Performance baseline
 
-Lighthouse 13.4.1 in Chrome 154 DevTools, mobile. Measured 11 Oct 2026 on the published theme (untouched Dwell 4.2.0) with the storefront password unlocked. **One run per page**, so allow for about ±5 points of run-to-run variance.
+Lighthouse 13.4.1 in Chrome 154 DevTools, mobile. **One run per page**, so allow for about ±5 points of run-to-run variance.
+
+### v1: untouched Dwell, before the catalogue was loaded
+
+Measured 11 Oct 2026 on the published theme (untouched Dwell 4.2.0) with the storefront password unlocked.
 
 | Page | Mode | Score | LCP | CLS | TBT | INP |
 |---|---|---|---|---|---|---|
@@ -122,7 +158,6 @@ Lighthouse 13.4.1 in Chrome 154 DevTools, mobile. Measured 11 Oct 2026 on the pu
 | Planter product page `/products/bell-planter-15cm` | Navigation | 80 | 3.8 s | 0.105 | 110 ms | n/a |
 | Collection `/collections/all` | Navigation | 70 | 7.4 s | 0 | 70 ms | n/a |
 | Cart drawer open (Add to cart on planter page) | Timespan | n/a | n/a | 0.005 | 30 ms | 110 ms |
-| Plant product page | Navigation | Not measured yet: no plant product exists. Measure before `feat/pb-care-label`. | | | | |
 
 Notes:
 
@@ -130,3 +165,13 @@ Notes:
 - The LCP element is text on every page (home `<p>`, product `<h1>`, collection `<span>`), so font loading drives LCP.
 - Fonts loaded: Newsreader (300, 400, 700 and italic) and Red Hat Display 500 from Dwell's preset. GT Standard also loads from `cdn.shopify.com/shop-assets/…`, which appears to be injected by Shopify rather than by the theme *(unconfirmed)*.
 - Planter product page CLS of 0.105 comes from Dwell's media-with-content section in the product template. That's just over the 0.1 "good" threshold. It's vendor behaviour and is left untouched.
+
+### v2: untouched Dwell, after the catalogue was loaded
+
+Same conditions as v1, measured after the 10 products, images and 3 collections were added (`chore/data-model`). The catalogue changes what Home and Collection render, so v1 isn't a like-for-like comparison any more. **Later features compare against v2.**
+
+| Page | Mode | Score | LCP | CLS | TBT | INP |
+|---|---|---|---|---|---|---|
+| Home `/` | Navigation | *To measure* | | | | n/a |
+| Plant product page `/products/devils-ivy` | Navigation | *To measure* | | | | n/a |
+| Collection `/collections/all` | Navigation | *To measure* | | | | n/a |
