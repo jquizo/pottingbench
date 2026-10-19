@@ -314,4 +314,31 @@ Later branches add the $120 free-shipping rate and the WA and Tasmania shipping 
 
 Customiser settings that the store relies on. Saving commits `config/settings_data.json` to `main`, so run `git switch main`, then `git pull`, afterwards.
 
-- [ ] **14. Show AUD on product pages** (`feat/gst-labels`, after merging). Online Store → Themes → pottingbench/main → Customise → Theme settings (gear icon) → **Currency code** → turn on **Product pages** *(unsure of current UI)*. Leave **Product cards** off. Cart items and cart total are on by default. Check: the Bell Planter 20cm page shows "$59.00 AUD".
+- [x] **14. Show AUD on product pages** (`feat/gst-labels`, after merging). Online Store → Themes → pottingbench/main → Customise → Theme settings (gear icon) → **Currency code** → turn on **Product pages** *(unsure of current UI)*. Leave **Product cards** off. Cart items and cart total are on by default. Check: the Bell Planter 20cm page shows "$59.00 AUD". (Done 19 Oct 2026, commit `4b6e350`; checked 20 Oct 2026.)
+
+### Brand tokens (`feat/brand-tokens`)
+
+Dwell reads its colours and fonts from these settings and turns them into CSS custom properties, so no code changes (README D12). Do one step at a time, **Save** after each, then `git switch main` and `git pull`.
+
+- [ ] **15. Colour palette.** Theme settings → **Color palette** *(unsure of current UI)*. The palette shows swatches, not names, so find each colour by its current hex:
+
+  | Palette key | Current | New | Used for |
+  |---|---|---|---|
+  | `background` | `#ffffff` | `#F7F7F5` | Page, drawers, popovers, button text |
+  | `foreground` | `#4A4A4A` | `#111111` | Text, primary buttons, selected variant |
+  | `color4` | `#D0CAC4` | `#767672` | Footer newsletter input border; input borders after step 16 |
+
+  Leave `color1` (`#7D5449`) and `color3` (`#E9E4E0`) as they are. Check: the page background is off-white and body text is near-black.
+
+- [ ] **16. Input field borders.** Theme settings → **Input fields** → **Borders** → choose the `#767672` palette swatch *(unsure of current UI)*. It's currently `#E9E4E0`, which is 1.18:1 against the page and fails WCAG 1.4.11 (3:1 for form field edges). `#767672` gives 4.25:1. Check: the search field and the footer newsletter field have a clearly visible border.
+
+- [ ] **17. Fonts.** Theme settings → **Typography** → Fonts *(unsure of current UI)*:
+
+  | Role | Now | New |
+  |---|---|---|
+  | Heading | Newsreader Light (300) | **Fraunces** Regular (400) |
+  | Subheading | Newsreader Regular (400) | **Fraunces** Regular (400) |
+  | Body | Newsreader Regular (400) | **Work Sans** Regular (400) |
+  | Accent | Red Hat Display Medium (500) | **Work Sans** Regular (400) |
+
+  Use the same weight for both roles of each font: that's what keeps it to 2 font files (README D13). Leave the heading-level font settings (H1–H6) as they are. Check: headings are in Fraunces, and body text, the menu and uppercase labels are in Work Sans.
