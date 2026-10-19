@@ -127,3 +127,35 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - The customiser path to the currency code settings (flagged in step 14).
 
 **Outcome (accepted / changed / rejected):**
+
+---
+
+## 2026-10-20 · feat/brand-tokens
+
+**What AI produced**
+
+- A trace of how Horizon handles colour and type: the palette (`snippets/color-palette.liquid`), per-block contrast (`snippets/contrast-override.liquid`), font loading (`snippets/fonts.liquid`, `snippets/theme-styles-variables.liquid`) and the settings behind them.
+- The recommendation to do this feature as customiser settings with no code (README D12), and the two-font-file plan with Horizon's `swap` kept (D13).
+- Customiser steps 15–17 in `docs/admin-setup.md`, the README known-issues list, and step 14 ticked.
+- Contrast ratios computed with the WCAG 2.x formula: `#111111` on `#F7F7F5` 17.60:1; muted text (60% opacity) 4.83:1, where Dwell's was 3.11:1 and failed; input borders 1.18:1 → 4.25:1 with `#767672`; checkbox borders 2.25:1 (left as a known issue).
+- Docs checked:
+  - [Font library](https://shopify.dev/docs/storefronts/themes/architecture/settings/fonts) (Fraunces and Work Sans are both listed, 100–900 plus italics)
+  - [Input settings: font_picker, color_palette](https://shopify.dev/docs/storefronts/themes/architecture/settings/input-settings)
+  - [font_face](https://shopify.dev/docs/api/liquid/filters/font_face), [font_url](https://shopify.dev/docs/api/liquid/filters/font_url), [font_modify](https://shopify.dev/docs/api/liquid/filters/font_modify)
+
+**What I should verify**
+
+- [ ] After step 17, Network panel: only Fraunces 400 and Work Sans 400 download on Home, and each file is requested once (4 preload tags point at 2 URLs).
+- [ ] Bold or italic files appear only on pages that use bold or italic text.
+- [ ] CLS stays at or below the before-runs after the font swap.
+- [ ] Keyboard: focus outlines are visible on `#F7F7F5` and on the `#111111` buttons.
+- [ ] Uppercase accent labels (menu, H4, H6, badges) still read well at weight 400. If not, try Work Sans 500 (one more file).
+- [ ] Lighthouse before and after, median of 3: Home, Bell Planter 20cm, `/collections/all`.
+
+**What AI was unsure about**
+
+- The customiser labels for the colour palette, input field borders and fonts (flagged in steps 15–17). The setting names came from `locales/en.default.schema.json`.
+- Whether Chrome fetches a font once when two preload tags point at the same URL.
+- The fallback fonts Shopify lists for Fraunces and Work Sans (`font.fallback_families`), and so how much the swap shifts layout.
+
+**Outcome (accepted / changed / rejected):**
