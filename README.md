@@ -160,6 +160,13 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 - **Decision:** AI-generated with Gemini, disclosed in this README.
 - **Reason:** the store is a disclosed concept with no real stock, and per-variant images are needed to test the variant picker and the glaze accent.
 
+### D10. Baseline v2 includes a planter product page
+
+- **Options:** keep v2 to the three pages first planned (Home, Golden Pothos, Collection), or add a planter page.
+- **Trade-offs:** v1's planter row was measured before the planter had any images, so it's no longer a fair "before" for `feat/pb-glaze-accent`. Bell Planter 20cm has its final images; the 15cm's are being regenerated (step 11c). One more run costs about two minutes.
+- **Decision:** add `/products/bell-planter-20cm` to v2. Leave the cart drawer until just before `feat/cart-free-shipping`.
+- **Reason:** every feature compares against a baseline of the page it changes.
+
 ### Spelling exceptions
 
 Our identifiers use Australian spelling. American spelling appears only where an external API requires it.
@@ -172,9 +179,11 @@ Our identifiers use Australian spelling. American spelling appears only where an
 
 **Product images are AI-generated with Google Gemini.** They don't show real stock. This is a concept store, and a real merchant must photograph the goods they actually sell (see D9). All images are 4:5 portrait.
 
+The images are uploaded as JPEG masters (about 2 MB each). Customers never download the masters: `image_url` requests a resized copy, and Shopify's CDN re-encodes it as WebP (or JPEG XL) for the browser. In the v2 baseline each product image arrived at 3–79 KB.
+
 ## Performance baseline
 
-Lighthouse 13.4.1 in Chrome 154 DevTools, mobile. **One run per page**, so allow for about ±5 points of run-to-run variance.
+Lighthouse 13.4.1 in Chrome DevTools (Chrome 154 for v1, Chrome 155 for v2), mobile. **One run per page**, so allow for about ±5 points of run-to-run variance.
 
 ### v1: untouched Dwell, before the catalogue was loaded
 
@@ -198,10 +207,27 @@ Notes:
 
 Same conditions as v1, measured after the 10 products, images and 3 collections were added (`chore/data-model`). The catalogue changes what Home and Collection render, so v1 isn't a like-for-like comparison any more. **Later features compare against v2.**
 
-Dwell's code is still untouched, but theme editor settings changed on 17 Oct 2026 (commit `89197db`): product media aspect ratio `1` (square, was `1/1.25`), thumbnails on the left, media corner radius 8.
+Measured 19 Oct 2026. Dwell's code is still untouched, but two theme editor changes came first:
 
-| Page | Mode | Score | LCP | CLS | TBT | INP |
-|---|---|---|---|---|---|---|
-| Home `/` | Navigation | *To measure* | | | | n/a |
-| Plant product page `/products/golden-pothos` | Navigation | *To measure* | | | | n/a |
-| Collection `/collections/all` | Navigation | *To measure* | | | | n/a |
+- 17 Oct 2026 (commit `89197db`): product media aspect ratio `1` (square, was `1/1.25`), thumbnails on the left, media corner radius 8.
+- 19 Oct 2026 (commits `a280d58`, `19b748f`): a second product list on Home, showing the Indoor Plants collection, above the existing one.
+
+| Page | Mode | Score | LCP | CLS | TBT | INP | LCP element |
+|---|---|---|---|---|---|---|---|
+| Home `/` | Navigation | 74 | 6.1 s | 0 | 80 ms | n/a | Text: Dwell's demo `<p>` in the second section |
+| Plant product page `/products/golden-pothos` | Navigation | 66 | 7.5 s | 0 | 150 ms | n/a | Image: first product photo |
+| Planter product page `/products/bell-planter-20cm` | Navigation | 80 | 4.0 s | 0 | 190 ms | n/a | Image: first product photo |
+| Collection `/collections/all` | Navigation | 77 | 4.8 s | 0 | 170 ms | n/a | Image: first product card |
+
+Notes:
+
+- **Images aren't the bottleneck.** Each product image arrived as WebP or JPEG XL at 3–79 KB. Images were 3–19% of each page's 2.2–2.3 MB. On both product pages the LCP image passed all three Lighthouse discovery checks (`fetchpriority=high`, in the initial HTML, not lazy-loaded) and downloaded in about 50 ms in the observed trace.
+- **The two product pages share a template but differ by 3.5 s of LCP.** FCP differs too (3.8 s against 2.7 s), and FCP comes before any image paints, so this is most likely run-to-run variance in a single run, not the Golden Pothos images (69 KB more). Treat the Golden Pothos row with caution, and use the median of three runs when a feature changes the product page.
+- **Bigger costs than images:**
+  - fonts, at 220–375 KB per page (four Newsreader files plus GT Standard);
+  - render-blocking CSS: `compiled_assets/styles.css` (50 KB), `base.css`, and on product pages `accelerated-checkout.css`;
+  - the dynamic checkout buttons' `portable-wallets` script (83 KB, high priority);
+  - about 970 KB of `checkout-web` scripts that Shopify prefetches at the lowest priority, which isn't theme code.
+- **Collection:** the LCP card image has no `fetchpriority=high`, and the cards download 635 px images for 403 px slots (Lighthouse estimates 114 KiB of savings). This is Horizon card behaviour *(cause unconfirmed)*.
+- **Product pages:** CLS is now 0. v1's 0.105 no longer appears; the cause wasn't investigated.
+- **Cart drawer:** not re-measured. Re-measure it before `feat/cart-free-shipping`.

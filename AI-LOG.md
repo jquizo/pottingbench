@@ -75,3 +75,30 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - Whether the regex also checks translated values. Untested; it doesn't matter while the store is English-only.
 
 **Outcome (accepted / changed / rejected):**
+
+---
+
+## 2026-10-19 · chore/baseline-v2
+
+**What AI produced**
+
+- Analysis of the four Lighthouse v2 JSON reports: scores, LCP elements, image responses, render-blocking CSS, fonts and page weight. The results and notes are in the README v2 table.
+- Push-back on re-uploading smaller JPEGs to speed the site up. The reports show each image arrives as WebP or JPEG XL at 3–79 KB, whatever the master size, and the LCP image downloads in about 50 ms.
+- D10 (a planter page in baseline v2), and corrections to `docs/admin-setup.md` step 11: images uploaded as JPEG, and the alt text table is guidance, not exact wording.
+- The retrospective end-of-feature pack for `chore/data-model` (PR #2), delivered in the `chore/baseline-v2` pull request.
+
+**What I should verify**
+
+- [ ] The README v2 numbers match the four reports (Home 74, Golden Pothos 66, Bell Planter 20cm 80, Collection 77).
+- [ ] The Golden Pothos row: re-run it three times and compare with the median. AI thinks 7.5 s is run-to-run variance, because the Bell Planter 20cm page uses the same template and measured 4.0 s.
+- [ ] Whether the home product list added in the customiser on 19 Oct (`a280d58`, `19b748f`) was meant to stay.
+
+**What AI was unsure about**
+
+- Whether Shopify keeps the uploaded file's extension in CDN URLs. AI inferred the JPEG upload from the `.jpg` URLs, and you confirmed it.
+- The cause of the collection cards' oversized images (635 px for 403 px slots): probably Horizon's `sizes` attribute, but the code wasn't read.
+- How much Shopify's prefetched `checkout-web` scripts (about 970 KB) affect simulated LCP.
+- Why v1's planter page CLS of 0.105 has gone. Not investigated.
+- **Correction:** the LCP element audit has moved. In Lighthouse 13 it's under Insights → "LCP breakdown", not Diagnostics.
+
+**Outcome (accepted / changed / rejected):**

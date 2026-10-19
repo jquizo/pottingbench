@@ -115,7 +115,7 @@ Checklist (added in `chore/data-model`). Work top to bottom: definitions before 
   - [ ] 11d. Pots & Planters collection image: the Tenmoku and Terracotta pots are the rounded jar shape we don't sell. Regenerate with the real shapes (bell and cylinder).
   - [ ] 11e. Potting Mix & Fertiliser collection image: the bottle label has garbled text and "Dllute". Regenerate or crop.
 - [ ] **12. Collection description in the theme editor.** Only after the `chore/data-model` pull request is merged.
-- [ ] **13. Data checks and baseline.**
+- [x] **13. Data checks and baseline.** (19 Oct 2026)
 
 ### 6. Plant care definition
 
@@ -266,10 +266,12 @@ Copy rules behind these:
   - the same product has the same shape and framing in every variant;
   - no brand names or logos.
 - **File names:** start with the handle, lowercase, hyphens, for example `bell-planter-20cm-glazed-ceramic-celadon`. Google treats file names as "very light clues", and alt text matters far more ([Google Images SEO](https://developers.google.com/search/docs/appearance/google-images)).
-- **Format:** uploaded as **WebP**, converted from Gemini's `.jfif` (JPEG) files with `sharp` at quality 90 (16 Oct 2026). The files shrank from about 2 MB to 50–360 KB each, with no visible banding. Converting isn't required: Shopify's CDN already serves WebP or AVIF to browsers that support them ([`image_url`](https://shopify.dev/docs/api/liquid/filters/image_url)), so uploading JPEG or PNG works too. Keep the original `.jfif` files outside the repo as masters.
+- **Format:** uploaded as **JPEG**, Gemini's original `.jpg` files (plants 16 Oct 2026, planters and supplies 17 Oct 2026). WebP copies made with `sharp` at quality 90 sit in the `webp\` subfolder but weren't uploaded. The upload format doesn't change what customers download: `image_url` asks the CDN for a resized copy, and the CDN re-encodes it for the browser ([`image_url`](https://shopify.dev/docs/api/liquid/filters/image_url)). Measured 19 Oct 2026 in Chrome 155: every product image arrived as WebP (one thumbnail as JPEG XL), 3–79 KB each. Re-uploading smaller files wouldn't reduce what customers download. Keep the original `.jpg` files outside the repo as masters.
+- **Latest versions:** the Bell Planter 20cm masters were last saved on 16 Oct 2026 at 11:09–11:13 pm, and the store's copies were uploaded on 17 Oct 2026, so the store has the latest versions.
 - **Upload:** product → **Media** → **Upload new** (or **Select existing** for a file already in Content → Files, so you don't create a duplicate) ([Help Center](https://help.shopify.com/en/manual/products/product-media/add-media)) *(unsure of current UI)*. Put the first variant's image first: the first media item is the featured image on product cards, the cart and checkout. Drag to reorder.
 - **Variant images:** Variants → the image icon next to each variant → choose the image → **Done** → **Save** ([Help Center](https://help.shopify.com/en/manual/products/product-media/add-images-variants)).
 - **Alt text:** after uploading, the product → click the image → **Add alt text** → type it → **Save alt text** → **X** ([Help Center](https://help.shopify.com/en/manual/products/product-media/add-alt-text)) *(unsure of current UI)*. Describe what a customer sees, without keyword stuffing.
+- **The table below is suggested wording, not an exact match.** The store's alt text differs (checked 19 Oct 2026) and may change again. Keep to the rules instead: describe what's visible, say which glaze or size it is when a product's variant images differ, and make no claims (care, fit, hand-made).
 
 | Image | Alt text |
 |---|---|
@@ -302,6 +304,6 @@ The collection template shows only the title. To show the description, open Onli
 - [x] Each collection shows the right products: 5 plants, 3 planters, 2 mix and fertiliser, in admin and on the storefront. (19 Oct 2026)
 - [x] Test cart **$119.95**: Bell Planter 20cm + Snake Plant + Indoor Potting Mix 5L. (19 Oct 2026)
 - [x] Test cart **$120.00**: Bell Planter 15cm + Snake Plant + Parlour Palm. (19 Oct 2026)
-- [ ] Lighthouse mobile, same conditions as the README baseline: `/products/golden-pothos`, `/` and `/collections/all`. Record the results in the README as baseline v2.
+- [x] Lighthouse mobile, same conditions as the README baseline: `/`, `/products/golden-pothos`, `/products/bell-planter-20cm` and `/collections/all`. Results recorded in the README as baseline v2. (19 Oct 2026)
 
 Later branches add the $120 free-shipping rate and the WA and Tasmania shipping zones.
