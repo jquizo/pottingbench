@@ -42,16 +42,37 @@ shopify theme check
 
 The Shopify GitHub integration deploys `main` to the connected theme, and theme editor saves commit back to `main`. Work on a branch and merge through a pull request. CI runs Theme Check on every pull request and on pushes to `main`, and fails on errors only.
 
+### Keeping local files in sync
+
+GitHub is the source of truth for theme files. Admin data (products, metafields, metaobjects, collections, settings) lives in the store database, never in the repo, so there's nothing to pull for it. `shopify theme dev` reads it live: refresh the preview.
+
+| Situation | Is GitHub ahead of your computer? | What to do |
+|---|---|---|
+| Before starting a new branch | Maybe (a customiser save or a merged PR) | `git switch main`, then `git pull`, then create the branch |
+| Just merged a PR on GitHub | Yes | `git switch main`, then `git pull`, then delete the local branch |
+| Saved in the theme editor on **pottingbench/main** | Yes: the integration committed to `main` | `git switch main`, then `git pull` |
+| Changed admin data (products, metafields, metaobjects, settings) | No: nothing is committed anywhere | Nothing to pull. Update `docs/admin-setup.md` if the steps differed. |
+| Working on your own feature branch | No: only you push to it | Nothing to pull |
+| Want another theme's files | n/a | **Never run `shopify theme pull` inside this repo.** If you must inspect another theme, pull it into a separate scratch folder. |
+
+Before any pull: run `git status`, check you're on the branch you expect, and that there are no uncommitted changes. `git pull` = `git fetch` + `git merge` into the **current** branch. In GitHub Desktop it's **Fetch origin**, then **Pull origin**.
+
+**Rule:** pull `main` before you branch, after you merge, and after any customiser save.
+
 ## Data model
 
 | Resource | Definition | Fields / type | Used by | Status |
 |---|---|---|---|---|
 | Metaobject | Glaze (`glaze`) | `name` single line text (required), `colour` colour (required), `finish` single line text (Gloss, Satin, Matte), `pattern_image` file, images only (optional) | `pb-glaze-accent` | Created |
 | Variant metafield | `custom.glaze` | Metaobject reference → Glaze, one entry | `pb-glaze-accent` | Created |
-| Product option | Colour | Plain text (Celadon, Tenmoku, …). Not linked to a metafield. | Horizon variant picker | Created on test product |
-| Metaobject | Plant care (`plant_care`) | Botanical name, light, water, humidity, pet safe, difficulty | `pb-care-label` | Planned |
-| Product metafield | `custom.care` | Metaobject reference → Plant care | `pb-care-label` | Planned |
-| Product metafield | `custom.live_plant` | True or false | `cart-live-plant-notice` | Planned |
+| Product option | Colour | Plain text (Celadon, Tenmoku, …). Not linked to a metafield. | Horizon variant picker | Created on all 3 planters |
+| Metaobject | Plant care (`plant_care`) | `botanical_name` single line text (required); `light`, `water`, `humidity`, `difficulty` single line text limited to fixed values by regex validation (required); `pet_safe` single line text with the same kind of regex validation (optional: blank means unknown) | `pb-care-label` | Created |
+| Product metafield | `custom.care` | Metaobject reference → Plant care, one entry | `pb-care-label` | Created |
+| Product metafield | `custom.live_plant` | True or false. True on plants, False on everything else, set explicitly (blank = not reviewed; the theme treats it as false). | `cart-live-plant-notice` | Created |
+| Product type | `Indoor plant`, `Pot`, `Potting mix & fertiliser` | Drives the 3 automated collections | Collections | Created |
+| Collections | `indoor-plants`, `pots-planters`, `potting-mix-fertiliser` | Condition: Type is equal to … (new collections model) | Navigation, collection pages | Created |
+
+Values and the full catalogue are in [docs/admin-setup.md](docs/admin-setup.md#catalogue-and-plant-care).
 
 ## Overrides of Dwell core files
 
@@ -104,6 +125,41 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 - **Decision:** private. Grant read access to reviewers on request.
 - **Reason:** it respects the licence. This isn't legal advice.
 
+### D6. Plant care data model
+
+- **Options:**
+  - six product metafields, or one `plant_care` metaobject referenced by `custom.care`;
+  - choice values stored as display text, or as keys that the theme maps to locale strings;
+  - pet safety as True or false, or as text limited to two values.
+- **Trade-offs:**
+  - Plants and care entries are 1:1 today, so product metafields would work. A metaobject groups the care fields in one definition and needs only one reference per product.
+  - Keys plus locale strings keep wording in code, but every new value would need a deploy. Display text limited to fixed values still gives consistent tags, and the metaobject's translations cover other languages.
+  - Preset choices (a dropdown) exist for single line text metafields, but admin doesn't offer them for metaobject fields: only Character limit and Regular expression (checked 12 Oct 2026). An anchored regex such as `^(Low|Average|High)$` enforces the same exact values, without the dropdown.
+  - True or false is a checkbox in admin, so "never set" and "unticked" look the same, and that can't express "unknown". Optional text with two allowed values makes blank mean unknown.
+- **Decision:** a `plant_care` metaobject. Values are display text, limited by regex validation. Pet safety is optional text: "Non-toxic to cats and dogs" or "Toxic to cats and dogs".
+- **Reason:** it's the simplest model that keeps tags consistent and never shows a pet-safety claim we haven't checked. The wording matches the ASPCA list, which says "non-toxic", not "safe".
+
+### D7. Collection rules
+
+- **Options:** manual collections, automated by tag, automated by product type, automated by Shopify's standard product category, or automated by the `custom.live_plant` metafield (Shopify supports True or false metafield conditions).
+- **Trade-offs:** manual collections drift as products are added. Tags are free text and easy to mistype. Product type gives each product exactly one category, so the same rule works for all 3 collections. Shopify's standard Category is also a condition, but the supplies collection would need two (Soil or Fertilizers, "match any"), and it follows Shopify's taxonomy rather than our own merchandising. The `live_plant` flag would only cover plants, and it duplicates the product type for plants. That's accepted because it states the shipping rule directly; a data check in `docs/admin-setup.md` catches a plant left False or blank.
+- **Decision:** automated by product type. `live_plant` stays a separate flag for the cart notice.
+- **Reason:** one consistent rule, and the business rule (live plants) stays explicit rather than inferred from a type string in Liquid.
+
+### D8. Product name: Golden Pothos, not Devil's Ivy
+
+- **Options:** keep "Devil's Ivy" (a common Australian retail name), rename to "Pothos", or rename to "Golden Pothos".
+- **Trade-offs:** Google Trends (Australia, 5 years, checked 16 Oct 2026) showed more search interest for pothos than for devils ivy. "Pothos" alone covers several cultivars (Marble Queen, Neon), so it's less precise than the product we sell. Renaming before launch costs nothing: the store is password-protected and nothing is indexed.
+- **Decision:** title **Golden Pothos**, handle `golden-pothos`. "Devil's Ivy" stays in the SEO title and the description, so both names are searchable.
+- **Reason:** lead with the name customers search for, keep it accurate to the cultivar, and still match people who know the other name.
+
+### D9. Product images: AI-generated, not stock photos
+
+- **Options:** stock photos (Unsplash or Pexels), AI-generated images (Google Gemini), or photographing real products.
+- **Trade-offs:** stock photos show real plants, but no stock photo shows our exact glazes, so the variant images wouldn't match the glaze names. AI can show every glaze on the same planter shape, with one consistent background, but it shows goods that don't exist. AI images also need checking: one batch gave the Bell Planter 15cm a different shape from the 20cm. A real merchant has no choice: images must show the actual goods, or customers could be misled under the Australian Consumer Law.
+- **Decision:** AI-generated with Gemini, disclosed in this README.
+- **Reason:** the store is a disclosed concept with no real stock, and per-variant images are needed to test the variant picker and the glaze accent.
+
 ### Spelling exceptions
 
 Our identifiers use Australian spelling. American spelling appears only where an external API requires it.
@@ -112,9 +168,17 @@ Our identifiers use Australian spelling. American spelling appears only where an
 |---|---|---|
 | *None yet* | | |
 
+## Images
+
+**Product images are AI-generated with Google Gemini.** They don't show real stock. This is a concept store, and a real merchant must photograph the goods they actually sell (see D9). All images are 4:5 portrait.
+
 ## Performance baseline
 
-Lighthouse 13.4.1 in Chrome 154 DevTools, mobile. Measured 11 Oct 2026 on the published theme (untouched Dwell 4.2.0) with the storefront password unlocked. **One run per page**, so allow for about ±5 points of run-to-run variance.
+Lighthouse 13.4.1 in Chrome 154 DevTools, mobile. **One run per page**, so allow for about ±5 points of run-to-run variance.
+
+### v1: untouched Dwell, before the catalogue was loaded
+
+Measured 11 Oct 2026 on the published theme (untouched Dwell 4.2.0) with the storefront password unlocked.
 
 | Page | Mode | Score | LCP | CLS | TBT | INP |
 |---|---|---|---|---|---|---|
@@ -122,7 +186,6 @@ Lighthouse 13.4.1 in Chrome 154 DevTools, mobile. Measured 11 Oct 2026 on the pu
 | Planter product page `/products/bell-planter-15cm` | Navigation | 80 | 3.8 s | 0.105 | 110 ms | n/a |
 | Collection `/collections/all` | Navigation | 70 | 7.4 s | 0 | 70 ms | n/a |
 | Cart drawer open (Add to cart on planter page) | Timespan | n/a | n/a | 0.005 | 30 ms | 110 ms |
-| Plant product page | Navigation | Not measured yet: no plant product exists. Measure before `feat/pb-care-label`. | | | | |
 
 Notes:
 
@@ -130,3 +193,15 @@ Notes:
 - The LCP element is text on every page (home `<p>`, product `<h1>`, collection `<span>`), so font loading drives LCP.
 - Fonts loaded: Newsreader (300, 400, 700 and italic) and Red Hat Display 500 from Dwell's preset. GT Standard also loads from `cdn.shopify.com/shop-assets/…`, which appears to be injected by Shopify rather than by the theme *(unconfirmed)*.
 - Planter product page CLS of 0.105 comes from Dwell's media-with-content section in the product template. That's just over the 0.1 "good" threshold. It's vendor behaviour and is left untouched.
+
+### v2: untouched Dwell code, after the catalogue was loaded
+
+Same conditions as v1, measured after the 10 products, images and 3 collections were added (`chore/data-model`). The catalogue changes what Home and Collection render, so v1 isn't a like-for-like comparison any more. **Later features compare against v2.**
+
+Dwell's code is still untouched, but theme editor settings changed on 17 Oct 2026 (commit `89197db`): product media aspect ratio `1` (square, was `1/1.25`), thumbnails on the left, media corner radius 8.
+
+| Page | Mode | Score | LCP | CLS | TBT | INP |
+|---|---|---|---|---|---|---|
+| Home `/` | Navigation | *To measure* | | | | n/a |
+| Plant product page `/products/golden-pothos` | Navigation | *To measure* | | | | n/a |
+| Collection `/collections/all` | Navigation | *To measure* | | | | n/a |
