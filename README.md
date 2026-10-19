@@ -80,7 +80,7 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 
 | File | Change | Reason | PR |
 |---|---|---|---|
-| *None yet* | | | |
+| `locales/en.default.json` | 5 `content.*` tax strings say "Includes GST" instead of "Taxes included" or "Duties and taxes included": `taxes_included`, `taxes_included_shipping_at_checkout_without_policy`, `taxes_included_shipping_at_checkout_with_policy_html`, `duties_and_taxes_included_shipping_at_checkout_without_policy_without_discounts`, `duties_and_taxes_included_shipping_at_checkout_with_policy_without_discounts_html` | Australian GST labelling. Horizon's cart shows the "duties" strings whenever the discount code field is on (`snippets/tax-info.liquid:32`, `:38`). On a Dwell update, keep our values for these 5 keys. See D11. | `feat/gst-labels` |
 
 ## Decision log
 
@@ -166,6 +166,14 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 - **Trade-offs:** v1's planter row was measured before the planter had any images, so it's no longer a fair "before" for `feat/pb-glaze-accent`. Bell Planter 20cm has its final images; the 15cm's are being regenerated (step 11c). One more run costs about two minutes.
 - **Decision:** add `/products/bell-planter-20cm` to v2. Leave the cart drawer until just before `feat/cart-free-shipping`.
 - **Reason:** every feature compares against a baseline of the page it changes.
+
+### D11. GST labels: edit Horizon's locale strings
+
+- **Options:** change 5 strings in `locales/en.default.json`; change the wording in admin (Online Store → ⋯ → Edit default theme content); or add a `pb-` snippet with its own keys.
+- **Trade-offs:** the locale edit touches a vendor file, so Dwell updates need our 5 values kept, but it's tracked in Git and reviewable. Help Center doesn't say where admin wording edits are stored ([change wording](https://help.shopify.com/en/manual/online-store/themes/customizing-themes/language/change-wording)), so they'd be invisible in the repo. A `pb-` snippet still means editing 2 core call sites (`blocks/price.liquid`, `snippets/cart-summary.liquid`).
+- **Decision:** edit the 5 locale strings. "GST" is hard-coded because the store sells in Australia only. A multi-market store would need wording per market (Shopify Markets with translations per language or market).
+- **Reason:** the smallest change that labels prices correctly. It also stops the cart claiming duties are included.
+- **Caveat:** a real business may only say "Includes GST" once it's registered for GST. This concept store isn't (see [docs/admin-setup.md](docs/admin-setup.md#store-basics)). This isn't legal advice.
 
 ### Spelling exceptions
 

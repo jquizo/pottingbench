@@ -17,7 +17,7 @@ Click-by-click steps to rebuild the Potting Bench dev store from this repo. Thes
 - Currency AUD, market Australia only.
 - Storefront password stays on while this is a concept store.
 - **Store address first.** Shopify won't let you change tax settings until the store has an address: Settings → General → store address *(unsure of current UI)*. Use a real address you're entitled to use (your own, or a PO box), never a made-up one. The theme never prints it (no `shop.address` in the code), but it can appear in order emails and Shopify-generated policies.
-- **Prices include GST:** Settings → Taxes and duties → Additional configuration → turn on **"Include sales tax in product price and shipping rate"**. Shopify says "sales tax" generically; this is the GST-inclusive setting. Check: the product price shows "Taxes included." (verified 12 Oct 2026).
+- **Prices include GST:** Settings → Taxes and duties → Additional configuration → turn on **"Include sales tax in product price and shipping rate"**. Shopify says "sales tax" generically; this is the GST-inclusive setting. Check: the product price shows "Taxes included." (verified 12 Oct 2026). After `feat/gst-labels` it reads "Includes GST.", and the theme only shows it while this setting is on (`cart.taxes_included`).
 - **Tax regions → Australia stays "not collecting".** Shopify's Basic Tax requires a tax registration number ([Help Center](https://help.shopify.com/en/manual/taxes/registration)). A concept store has no ABN, and you must never enter a made-up one. A real merchant registers for GST, enters their ABN here, and then starts collecting.
 - Leave **"Charge sales tax on shipping"** as it is: Help Center says Australia taxes shipping automatically where it applies ([shipping tax](https://help.shopify.com/en/manual/taxes/shipping-tax)).
 - Every product keeps "Charge tax" on.
@@ -309,3 +309,9 @@ The collection template shows only the title. To show the description, open Onli
 - [x] Lighthouse mobile, same conditions as the README baseline: `/`, `/products/golden-pothos`, `/products/bell-planter-20cm` and `/collections/all`. Results recorded in the README as baseline v2. (19 Oct 2026)
 
 Later branches add the $120 free-shipping rate and the WA and Tasmania shipping zones.
+
+## Theme settings
+
+Customiser settings that the store relies on. Saving commits `config/settings_data.json` to `main`, so run `git switch main`, then `git pull`, afterwards.
+
+- [ ] **14. Show AUD on product pages** (`feat/gst-labels`, after merging). Online Store → Themes → pottingbench/main → Customise → Theme settings (gear icon) → **Currency code** → turn on **Product pages** *(unsure of current UI)*. Leave **Product cards** off. Cart items and cart total are on by default. Check: the Bell Planter 20cm page shows "$59.00 AUD".
