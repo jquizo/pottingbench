@@ -111,10 +111,12 @@ Checklist (added in `chore/data-model`). Work top to bottom: definitions before 
 - [ ] **11. Images.** 18 AI-generated 4:5 images (one per variant where variants differ), with alt text. Disclosed in the README.
   - [x] 11a. Product images uploaded with alt text (18 Oct 2026).
   - [x] 11b. Each variant linked to its image (reported done 19 Oct 2026).
-  - [ ] 11c. Bell Planter 15cm images regenerated in the 20cm's flared shape, uploaded, alt text set, variants re-linked. Local files unchanged as of 19 Oct 2026.
-  - [ ] 11d. Pots & Planters collection image: the Tenmoku and Terracotta pots are the rounded jar shape we don't sell. Regenerate with the real shapes (bell and cylinder).
-  - [ ] 11e. Potting Mix & Fertiliser collection image: the bottle label has garbled text and "Dllute". Regenerate or crop.
-- [ ] **12. Collection description in the theme editor.** Only after the `chore/data-model` pull request is merged.
+  - [ ] 11c. Bell Planter 15cm images regenerated in the 20cm's flared shape, uploaded, alt text set, variants re-linked. **Deferred (known issue, 19 Oct 2026):** the 15cm still shows a rounded jar shape, unlike the 20cm. Accepted for the concept demo.
+  - [ ] 11d. Pots & Planters collection image: the Tenmoku and Terracotta pots are the rounded jar shape we don't sell. Regenerate with the real shapes (bell and cylinder). **Deferred (known issue).**
+  - [ ] 11e. Potting Mix & Fertiliser collection image: the bottle label has garbled text and "Dllute". Regenerate or crop. **Deferred (known issue).**
+- [x] **12. Collection description in the theme editor.** (19 Oct 2026, commit `8422ad5` on `main`)
+  - [ ] 12a. Check each collection's description and meta description against the copy rules. **Skipped (19 Oct 2026).** The step 10 copy still contains "Easy-care" (Indoor Plants) and "Hand-glazed" (Pots & Planters meta description). Whatever is in admin now shows on the collection pages.
+  - [x] 12b. A Text block connected to **Collection → Description**, added below the title in the collection template's first section. The editor set that section's direction to column so the description sits under the title.
 - [x] **13. Data checks and baseline.** (19 Oct 2026)
 
 ### 6. Plant care definition
