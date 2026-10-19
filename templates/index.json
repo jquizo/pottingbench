@@ -9,16 +9,16 @@
  */
 {
   "sections": {
-    "hero_G7CAX9": {
+    "hero_jmrDhh": {
       "type": "hero",
       "blocks": {
-        "text_KJqzT8": {
+        "text_R8G8Tf": {
           "type": "text",
           "settings": {
-            "text": "<h2><em>Our Newest Collection</em></h2>",
-            "width": "100%",
-            "max_width": "normal",
-            "alignment": "center",
+            "text": "<h2>New arrivals</h2>",
+            "width": "fit-content",
+            "max_width": "narrow",
+            "alignment": "left",
             "type_preset": "h1",
             "font": "var(--font-body--family)",
             "font_size": "1rem",
@@ -26,29 +26,54 @@
             "letter_spacing": "normal",
             "case": "none",
             "wrap": "pretty",
-            "text_color": "{{ settings.color_palette.background }}",
+            "text_color": "",
             "background": false,
             "background_color": "#00000026",
             "corner_radius": 0,
             "padding-block-start": 0,
             "padding-block-end": 0,
-            "padding-inline-start": 16,
-            "padding-inline-end": 16
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
           "blocks": {}
         },
-        "button_cTVbXA": {
+        "text_Cj3hXq": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Made with care and unconditionally loved by our customers.</p>",
+            "width": "fit-content",
+            "max_width": "narrow",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 32,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "button_xreqxG": {
           "type": "button",
           "name": "t:names.button",
           "settings": {
-            "label": "SHOP NOW",
+            "label": "Shop now",
             "link": "shopify://collections/all",
             "open_in_new_tab": false,
-            "style_class": "button-unstyled",
+            "style_class": "button",
             "custom_button_background": "{{ settings.color_palette.foreground }}",
             "custom_button_text": "{{ settings.color_palette.background }}",
             "custom_button_border": "{{ settings.color_palette.background }}",
-            "link_text_color": "{{ settings.color_palette.background }}",
+            "link_text_color": "",
             "width": "fit-content",
             "custom_width": 100,
             "width_mobile": "fit-content",
@@ -58,12 +83,14 @@
         }
       },
       "block_order": [
-        "text_KJqzT8",
-        "button_cTVbXA"
+        "text_R8G8Tf",
+        "text_Cj3hXq",
+        "button_xreqxG"
       ],
       "name": "t:names.hero",
       "settings": {
         "media_type_1": "image",
+        "image_1": "shopify://shop_images/potting-bench-indoor-plants-and-glazed-planters-hero.jpg",
         "media_type_2": "image",
         "stack_media_on_mobile": false,
         "custom_mobile_media": false,
@@ -76,21 +103,21 @@
         "horizontal_alignment": "flex-start",
         "vertical_alignment": "center",
         "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
         "gap": 16,
-        "section_width": "full-width",
-        "section_height": "medium",
+        "section_width": "page-width",
+        "section_height": "large",
         "section_height_custom": 50,
-        "background_color": "rgba(0,0,0,0)",
+        "background_color": "",
         "toggle_overlay": true,
-        "overlay_color": "#00000030",
+        "overlay_color": "#00000026",
         "overlay_style": "gradient",
         "gradient_direction": "to top",
         "blurred_reflection": false,
         "reflection_opacity": 75,
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-start": 40,
+        "padding-block-end": 40
       }
     },
     "section": {
@@ -1379,7 +1406,7 @@
     }
   },
   "order": [
-    "hero_G7CAX9",
+    "hero_jmrDhh",
     "section",
     "product_list_GNDmqA",
     "product_list_YidTcf",
