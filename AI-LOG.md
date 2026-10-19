@@ -57,12 +57,12 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 
 **What I should verify**
 
-- [ ] Pet safety for all 5 plants against the ASPCA list, before entering any value.
+- [x] Pet safety for all 5 plants against the ASPCA list, before entering any value (13 Oct 2026: only *Chamaedorea elegans* is non-toxic).
 - [ ] Water and humidity values against a horticultural source.
 - [ ] The plant_care field keys in admin are exactly `botanical_name`, `light`, `water`, `humidity`, `pet_safe`, `difficulty`.
-- [ ] The product handles match `docs/admin-setup.md`, especially `devils-ivy` (the apostrophe).
-- [ ] Both test carts total exactly $119.95 and $120.00.
-- [ ] Each collection shows the right products.
+- [ ] The product handles match `docs/admin-setup.md`, especially `golden-pothos` (renamed from Devil's Ivy on 16 Oct 2026; Shopify may have kept the old handle).
+- [x] Both test carts total exactly $119.95 and $120.00 (19 Oct 2026).
+- [x] Each collection shows the right products, in admin and on the storefront (19 Oct 2026).
 
 **What AI was unsure about**
 
@@ -70,5 +70,8 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - Whether Liquid needs Storefronts access on a metaobject definition. The docs don't say, so it's kept On, as for Glaze.
 - Admin labels for preset choices, storefront access, the product URL handle, image alt text and the collection SEO fields (flagged in `docs/admin-setup.md`).
 - Whether the automated collection "Product type is equal to" condition is case-sensitive. Help Center doesn't say.
+- **Correction:** AI said metaobject fields could use "preset choices". The validation options page only covers metafield definitions, and admin offered only Character limit and Regular expression for metaobject fields. Replaced with anchored regex validation (D6 updated).
+- Whether an optional field with a regex accepts a blank value. **Tested 13 Oct 2026:** a blank Pet safety saved, and `low` in Humidity was rejected.
+- Whether the regex also checks translated values. Untested; it doesn't matter while the store is English-only.
 
 **Outcome (accepted / changed / rejected):**
