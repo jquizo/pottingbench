@@ -16,7 +16,12 @@ Click-by-click steps to rebuild the Potting Bench dev store from this repo. Thes
 
 - Currency AUD, market Australia only.
 - Storefront password stays on while this is a concept store.
-- Prices include GST: Settings → Taxes and duties → check that prices are shown and charged with tax included *(unsure of current UI)*. Every product keeps "Charge tax" on.
+- **Store address first.** Shopify won't let you change tax settings until the store has an address: Settings → General → store address *(unsure of current UI)*. Use a real address you're entitled to use (your own, or a PO box), never a made-up one. The theme never prints it (no `shop.address` in the code), but it can appear in order emails and Shopify-generated policies.
+- **Prices include GST:** Settings → Taxes and duties → Additional configuration → turn on **"Include sales tax in product price and shipping rate"**. Shopify says "sales tax" generically; this is the GST-inclusive setting. Check: the product price shows "Taxes included." (verified 12 Oct 2026).
+- **Tax regions → Australia stays "not collecting".** Shopify's Basic Tax requires a tax registration number ([Help Center](https://help.shopify.com/en/manual/taxes/registration)). A concept store has no ABN, and you must never enter a made-up one. A real merchant registers for GST, enters their ABN here, and then starts collecting.
+- Leave **"Charge sales tax on shipping"** as it is: Help Center says Australia taxes shipping automatically where it applies ([shipping tax](https://help.shopify.com/en/manual/taxes/shipping-tax)).
+- Every product keeps "Charge tax" on.
+- **Later check:** Tax regions lists **United States**, so a shipping zone still includes the US. Remove it when the shipping zones are set up (`feat/cart-live-plant-notice`).
 
 ## Glaze data model
 
@@ -97,13 +102,18 @@ Type the hex into the Colour field's text box rather than using the picker.
 
 Checklist (added in `chore/data-model`). Work top to bottom: definitions before entries, entries before products.
 
-- [ ] **5. Store basics.** Prices include GST (see [Store basics](#store-basics)).
-- [ ] **6. Metaobject definition "Plant care".** Settings → Metafields and metaobjects → Metaobject definitions → Add definition.
-- [ ] **7. Product metafields "Care" and "Live plant".** Settings → Metafields and metaobjects → Products → Add definition.
-- [ ] **8. Plant care entries.** Content → Metaobjects → Plant care → Add entry.
-- [ ] **9. Products.** 9 new products, plus product type "Pot" on the existing Bell Planter 15cm.
-- [ ] **10. Collections.** 3 automated collections with SEO fields.
-- [ ] **11. Images.** One 4:5 image per product, with alt text and a README credit.
+- [x] **5. Store basics.** Store address, then prices include GST (see [Store basics](#store-basics)).
+- [x] **6. Metaobject definition "Plant care".** Settings → Metafields and metaobjects → Metaobject definitions → Add definition.
+- [x] **7. Product metafields "Care" and "Live plant".** Settings → Metafields and metaobjects → Products → Add definition.
+- [x] **8. Plant care entries.** Content → Metaobjects → Plant care → Add entry.
+- [x] **9. Products.** 9 new products, plus the existing Bell Planter 15cm brought up to the same standard (done 15 Oct 2026).
+- [x] **10. Collections.** 3 collections with a Type condition and SEO fields (done 15 Oct 2026).
+- [ ] **11. Images.** 18 AI-generated 4:5 images (one per variant where variants differ), with alt text. Disclosed in the README.
+  - [x] 11a. Product images uploaded with alt text (18 Oct 2026).
+  - [x] 11b. Each variant linked to its image (reported done 19 Oct 2026).
+  - [ ] 11c. Bell Planter 15cm images regenerated in the 20cm's flared shape, uploaded, alt text set, variants re-linked. Local files unchanged as of 19 Oct 2026.
+  - [ ] 11d. Pots & Planters collection image: the Tenmoku and Terracotta pots are the rounded jar shape we don't sell. Regenerate with the real shapes (bell and cylinder).
+  - [ ] 11e. Potting Mix & Fertiliser collection image: the bottle label has garbled text and "Dllute". Regenerate or crop.
 - [ ] **12. Collection description in the theme editor.** Only after the `chore/data-model` pull request is merged.
 - [ ] **13. Data checks and baseline.**
 
@@ -111,16 +121,20 @@ Checklist (added in `chore/data-model`). Work top to bottom: definitions before 
 
 Name **Plant care**, type `plant_care`. Use the same options as Glaze (see [Glaze definition](#1-glaze-definition)), except **Display name: Botanical name**.
 
-| Field | Key | Type | Rules |
-|---|---|---|---|
-| Botanical name | `botanical_name` | Single line text | Required |
-| Light | `light` | Single line text | Required. Preset choices: Low to medium indirect · Low to bright indirect · Medium indirect · Bright indirect |
-| Water | `water` | Single line text | Required. Preset choices: Keep lightly moist · When top soil is dry · When soil is fully dry |
-| Humidity | `humidity` | Single line text | Required. Preset choices: Low · Average · High |
-| Pet safety | `pet_safe` | Single line text | **Optional.** Preset choices: Non-toxic to cats and dogs · Toxic to cats and dogs |
-| Difficulty | `difficulty` | Single line text | Required. Preset choices: Easy · Moderate · Tricky |
+| Field | Key | Type | Required | Validation → Regular expression |
+|---|---|---|---|---|
+| Botanical name | `botanical_name` | Single line text | Yes | none |
+| Light | `light` | Single line text | Yes | `^(Low to medium indirect\|Low to bright indirect\|Medium indirect\|Bright indirect)$` |
+| Water | `water` | Single line text | Yes | `^(Keep lightly moist\|When top soil is dry\|When soil is fully dry)$` |
+| Humidity | `humidity` | Single line text | Yes | `^(Low\|Average\|High)$` |
+| Pet safety | `pet_safe` | Single line text | **No** | `^(Non-toxic to cats and dogs\|Toxic to cats and dogs)$` |
+| Difficulty | `difficulty` | Single line text | Yes | `^(Easy\|Moderate\|Hard)$` |
 
-- Look for an option that limits the field to preset choices *(unsure of current UI)*. Type each choice exactly as above. The storefront shows the text as entered.
+In the patterns, type a plain `|`. The backslashes only appear because a Markdown table can't show a bare `|`.
+
+- **Add field** gives a row with the field label, key and type. **Required:** click the asterisk (\*) beside the field label. **Validation:** click the expand arrow on the row, then the Validation tab ([Help Center](https://help.shopify.com/en/manual/custom-data/metaobjects/building-a-metaobject)).
+- Metaobject fields in admin offer only **Character limit** and **Regular expression** (checked 12 Oct 2026). Preset choices aren't available, so an anchored regex allows only the exact values above. It's case-sensitive (Shopify uses RE2), so "low" or "Low " (with a trailing space) is rejected. The storefront shows the text as entered.
+- The key for "Pet safety" auto-fills as `pet_safety`. **Change it to `pet_safe`.**
 - Pet safety is optional on purpose. **Blank means "unknown"**, and the theme renders nothing for it. That's why it's a text field and not True or false, which is a checkbox and can't show "unknown". See README D6.
 - Check the keys before saving. They can't be renamed later, and the theme reads them.
 
@@ -128,48 +142,75 @@ Name **Plant care**, type `plant_care`. Use the same options as Glaze (see [Glaz
 
 | Name | Namespace and key | Type | Notes |
 |---|---|---|---|
-| Care | `custom.care` | Metaobject → Plant care, **one entry** | Plants only |
-| Live plant | `custom.live_plant` | True or false | Tick on plants only. Leave it unticked on everything else: the theme treats unticked as false. |
+| Care | `custom.care` | Type box: **One** + **Plant care** | Plants only |
+| Live plant | `custom.live_plant` | True or false | True on plants, False on everything else. Set it explicitly: blank means "not reviewed" (the theme treats blank as false). |
 
-Storefront access On for both *(unsure of current UI: may be under "Access")*.
+The screen (checked 12 Oct 2026):
+
+- **Name**, then the key shown underneath (for example `custom.care`). Check the key before saving.
+- **Suggested standards** (Care guide, Care instructions, …): **don't click them.** They swap in a Shopify standard definition with a different namespace and key.
+- **Type:** a **One / List** dropdown, then the type. Choose **One**.
+- **Category assignments:** leave empty, so the definition applies to every product.
+- **Options:**
+  - Filter on the product list and in the Admin API: **Off**
+  - Use as a condition in collections: **Off** (collections use product type; see README D7)
+  - **Storefront API access: On.** Without it the theme can't read the value.
 
 ### 8. Plant care entries
 
-Set every entry's status to **Active**. Leave **Pet safety blank** until you've checked each plant against the [ASPCA toxic and non-toxic plants list](https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants). The "expected" column is unverified.
+Set every entry's status to **Active**. Pet safety was checked against the [ASPCA toxic and non-toxic plants list](https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants) on 13 Oct 2026. For any new plant, leave Pet safety blank until you've checked it there.
 
-| Botanical name | Plant | Light | Water | Humidity | Pet safety (expected; check ASPCA) | Difficulty |
+| Botanical name | Plant | Light | Water | Humidity | Pet safety (ASPCA, checked) | Difficulty |
 |---|---|---|---|---|---|---|
-| Epipremnum aureum | Devil's Ivy | Low to bright indirect | When top soil is dry | Average | Toxic to cats and dogs | Easy |
+| Epipremnum aureum | Golden Pothos | Low to bright indirect | When top soil is dry | Average | Toxic to cats and dogs | Easy |
 | Dracaena trifasciata | Snake Plant | Low to bright indirect | When soil is fully dry | Low | Toxic to cats and dogs | Easy |
 | Spathiphyllum wallisii | Peace Lily | Medium indirect | Keep lightly moist | High | Toxic to cats and dogs | Moderate |
 | Chamaedorea elegans | Parlour Palm | Low to medium indirect | When top soil is dry | Average | Non-toxic to cats and dogs | Easy |
-| Ficus lyrata | Fiddle Leaf Fig | Bright indirect | When top soil is dry | Average | Toxic to cats and dogs | Tricky |
+| Ficus lyrata | Fiddle Leaf Fig | Bright indirect | When top soil is dry | Average | Toxic to cats and dogs | Hard |
 
 Water and humidity are general care guidance, not checked against a horticultural source. Sanity-check them before entering.
 
 ### 9. Products
 
-For every product: status Active, sales channel Online Store, "Charge tax" on, stock 5 per variant. Check the URL handle under Search engine listing *(unsure of current UI)* and set it to the handle below if Shopify generated something different.
+For every product:
 
-**Plants:** product type `Indoor plant`. Tick **Live plant**, and choose the matching **Care** entry.
+- Status **Active**, sales channel **Online Store**, **Charge tax** on, stock **5** per variant.
+- **Compare-at price** and **Cost per item**: blank. A made-up "was" price would mislead customers under the Australian Consumer Law.
+- **URL handle:** check it under Search engine listing *(unsure of current UI)* and set it to the handle below if Shopify generated something different.
+- **SEO:** page title and meta description from the approved product copy.
+- **Live plant:** set it **explicitly**: True on plants, False on everything else. Blank means "not reviewed", so step 13 can spot a product nobody checked. The theme treats blank as false anyway. *(Control type not recorded: checkbox or True/False dropdown.)*
+- **Category:** Shopify's standard product taxonomy. Names as Shopify shows them (checked 15 Oct 2026). Leave any extra category fields empty.
+
+| Products | Category (Shopify name) | Path |
+|---|---|---|
+| Plants | **Potted Houseplants** | Home & Garden > Plants > Indoor & Outdoor Plants |
+| Planters | **Planters** | Home & Garden > Lawn & Garden > Gardening > Pots & Planters |
+| Potting mix | **Soil** | Home & Garden > Lawn & Garden > Gardening > Sands & Soils |
+| Plant food | **Fertilizers** (Shopify's spelling, not our identifier) | Home & Garden > Lawn & Garden > Gardening |
+
+**Type** (Product organisation card): free text, our own value. It doesn't come from Shopify's list. Type it exactly as shown below and add it as a new type. After the first product, pick the existing type from the suggestions so every product matches ([Help Center: product type](https://help.shopify.com/en/manual/products/details/product-type)). Type and Category are separate: collections use Type, and Category is Shopify's standard taxonomy.
+
+**Variant options:** plain-text custom options only. Click **+ Add options like size or color** → Option name → Option values → **Done** → **Save**, then set price and stock on each variant ([Help Center](https://help.shopify.com/en/manual/products/variants/add-variants)). The first value is the default variant.
+
+**Plants:** product type `Indoor plant`. Live plant **True**, and choose the matching **Care** entry.
 
 | Title | Handle | Option | Variants and prices | Description |
 |---|---|---|---|---|
-| Devil's Ivy | `devils-ivy` | Size | Small 12cm $24 · Medium 17cm $39 | A trailing plant with heart-shaped leaves. Choose a 12cm or 17cm nursery pot. |
+| Golden Pothos | `golden-pothos` | Size | Small 12cm $24 · Medium 17cm $39 | A trailing plant with heart-shaped leaves. Choose a 12cm or 17cm nursery pot. |
 | Snake Plant | `snake-plant` | none | $45 | Stiff, upright, sword-shaped leaves, supplied in a 17cm nursery pot. |
 | Peace Lily | `peace-lily` | none | $42 | Glossy dark-green leaves and white flowers, supplied in a 17cm nursery pot. |
 | Parlour Palm | `parlour-palm` | none | $36 | A compact palm with soft, arching fronds, supplied in a 14cm nursery pot. |
 | Fiddle Leaf Fig | `fiddle-leaf-fig` | none | $69 | Large, violin-shaped leaves on an upright stem, supplied in a 20cm nursery pot. |
 
-**Planters:** product type `Pot`. Option **Colour**, as plain text (see [step 4](#4-test-product)). On each variant, set **Glaze** to the entry with the same name.
+**Planters:** product type `Pot`, Live plant **False**. Option **Colour**, as plain text (see [step 4](#4-test-product)). If Shopify offers a linked "Color" option or offers to connect Colour to a category metafield, **decline**. On each variant, open Metafields → **Glaze** and choose the entry with the same name. Linked an option by mistake? Edit → the metafield name → **Disconnect**.
 
 | Title | Handle | Colour values | Price | Description |
 |---|---|---|---|---|
-| Bell Planter 15cm | `bell-planter-15cm` | Celadon · Tenmoku · Terracotta · Chalk | $39 | Exists already: only set the product type. |
+| Bell Planter 15cm | `bell-planter-15cm` | Celadon · Tenmoku · Terracotta · Chalk | $39 | Exists already (step 4). Add the product type, category, description, SEO fields and Live plant False. |
 | Bell Planter 20cm | `bell-planter-20cm` | Celadon · Tenmoku · Terracotta · Chalk | $59 | A glazed ceramic bell planter, 20cm, in four glazes. |
 | Cylinder Planter 12cm | `cylinder-planter-12cm` | Celadon · Chalk | $29 | A glazed ceramic cylinder planter, 12cm, in two glazes. |
 
-**Potting mix and fertiliser:** product type `Potting mix & fertiliser`. Leave Live plant unticked.
+**Potting mix and fertiliser:** product type `Potting mix & fertiliser`. Live plant **False**.
 
 | Title | Handle | Price | Description |
 |---|---|---|---|
@@ -178,7 +219,20 @@ For every product: status Active, sales channel Online Store, "Charge tax" on, s
 
 ### 10. Collections
 
-Products → Collections → Create collection. Collection type **Automated**, condition **Product type is equal to** the value below, typed exactly. Help Center doesn't say whether this match is case-sensitive. Fill in the SEO fields under Search engine listing → Edit *(unsure of current UI)*. The store is password-protected, so the SEO work is practice only.
+This store uses Shopify's **new collections model** (screen checked 15 Oct 2026): there's no "Automated / Manual" choice any more. A collection has a **source** (Products or Variants) that you fill with conditions, hand-picked products, or both ([Help Center: create a collection](https://help.shopify.com/en/manual/products/collections/create-collection)).
+
+Products → Collections → **Add collection**, then:
+
+1. **Add title** and **Add description** (top card).
+2. Right-hand card: leave the source dropdown on **Products** (not Variants). Click **Add condition** → **Type** (not Category) → **is equal to** → the value below, typed exactly *(unsure of the operator label)*. The condition list offers Category, Compare at price, Inventory stock, Price, Status, Tag, Title, Type, Variant title, Vendor and Weight (checked 15 Oct 2026).
+3. **Don't use Add products or Exclude.** Hand-picked products stay until removed, so the collection would drift from the rule (README D7).
+4. **Channels** selector (top card, "3 channels" by default): check that **Online Store** is included.
+5. **Image:** added, with alt text (18 Oct 2026; the plan was to skip it). Files: `indoor-plants-collection.jpg`, `glazed-ceramic-indoor-pots-and-planters.jpg`, `indoor-plant-potting-mix-and-fertiliser.jpg` *(alt text per collection: not yet recorded)*. **Theme template:** Default collection.
+6. **Search engine listing** → pencil icon: page title, meta description, and check the URL handle.
+7. **Save.** **Collection items** should show 5, 3 and 2 products. Help Center doesn't say whether the product type match is case-sensitive.
+8. **Count too low?** Open the missing product and check its **Type** character for character (blank, plural, capitals, trailing space). This happened once on Pots & Planters (2 instead of 3, fixed 17 Oct 2026). A collection lists products, not variants: the 10 planter variants are 3 products, and the theme shows one card per product.
+
+The store is password-protected, so the SEO work is practice only.
 
 | Title | Handle | Product type | Description |
 |---|---|---|---|
@@ -200,9 +254,40 @@ Copy rules behind these:
 
 ### 11. Images
 
-- One image per product, **4:5 portrait**, at least 1600 × 2000 px. This matches Dwell's portrait product cards (ratio 0.8) and product media (`1/1.25` in `templates/product.json`).
-- Source: Unsplash or Pexels only. Check that the photo really shows the species named, because stock photos are often mislabelled. Add a row to the README "Image credits" table.
-- Alt text: describe the product as a customer would see it, for example "Devil's Ivy trailing over the rim of a nursery pot". Use the image's alt text option in the product's media *(unsure of current UI)*.
+**18 images:** one per variant where the variants look different (each glaze, each Golden Pothos size), otherwise one per product.
+
+- **Source:** AI-generated with Google Gemini (README D9). This replaces the earlier Unsplash or Pexels plan.
+- **Look:** plants in black nursery pots; planters shown empty; supplies unbranded (generic label text such as "Dilute before use" is fine, but no brand names or logos); background close to `#F7F7F5`.
+- **Size:** **4:5 portrait**, at least 1600 × 2000 px. This matches Dwell's portrait product cards (ratio 0.8). Gemini output is 1856 × 2304 (ratio 0.806), so cards crop less than 1%.
+- **Product page media is square** (aspect ratio `1`, set in the theme editor on 17 Oct 2026, commit `89197db` on `main`; Dwell's default was `1/1.25`). With media fit "cover", the product page crops about 10% off the top and bottom of each 4:5 image. Keep each product's subject inside the middle 80% of the height, and check tall plants (Fiddle Leaf Fig) and trailing ones (Golden Pothos) on the product page.
+- **Check before uploading:**
+  - each plant looks like its species;
+  - each glaze matches its name and finish;
+  - the same product has the same shape and framing in every variant;
+  - no brand names or logos.
+- **File names:** start with the handle, lowercase, hyphens, for example `bell-planter-20cm-glazed-ceramic-celadon`. Google treats file names as "very light clues", and alt text matters far more ([Google Images SEO](https://developers.google.com/search/docs/appearance/google-images)).
+- **Format:** uploaded as **WebP**, converted from Gemini's `.jfif` (JPEG) files with `sharp` at quality 90 (16 Oct 2026). The files shrank from about 2 MB to 50–360 KB each, with no visible banding. Converting isn't required: Shopify's CDN already serves WebP or AVIF to browsers that support them ([`image_url`](https://shopify.dev/docs/api/liquid/filters/image_url)), so uploading JPEG or PNG works too. Keep the original `.jfif` files outside the repo as masters.
+- **Upload:** product → **Media** → **Upload new** (or **Select existing** for a file already in Content → Files, so you don't create a duplicate) ([Help Center](https://help.shopify.com/en/manual/products/product-media/add-media)) *(unsure of current UI)*. Put the first variant's image first: the first media item is the featured image on product cards, the cart and checkout. Drag to reorder.
+- **Variant images:** Variants → the image icon next to each variant → choose the image → **Done** → **Save** ([Help Center](https://help.shopify.com/en/manual/products/product-media/add-images-variants)).
+- **Alt text:** after uploading, the product → click the image → **Add alt text** → type it → **Save alt text** → **X** ([Help Center](https://help.shopify.com/en/manual/products/product-media/add-alt-text)) *(unsure of current UI)*. Describe what a customer sees, without keyword stuffing.
+
+| Image | Alt text |
+|---|---|
+| Golden Pothos, Small 12cm | Golden Pothos Small 12cm in a black nursery pot, with green heart-shaped leaves marbled with yellow |
+| Golden Pothos, Medium 17cm | Golden Pothos Medium 17cm in a black nursery pot, with long trailing stems of green and yellow heart-shaped leaves |
+| Snake Plant | Snake Plant with upright, sword-shaped leaves banded in dark and light green, in a black nursery pot |
+| Peace Lily | Peace Lily with glossy dark-green leaves and two white flowers, in a black nursery pot |
+| Parlour Palm | Parlour Palm with soft, arching green fronds on slender stems, in a black nursery pot |
+| Fiddle Leaf Fig | Fiddle Leaf Fig with large, glossy, violin-shaped leaves on a single upright stem, in a black nursery pot |
+| Bell Planter 20cm, Celadon | Bell Planter 20cm in Celadon, a pale green gloss glaze, with a flared shape and rolled rim, shown empty |
+| Bell Planter 20cm, Tenmoku | Bell Planter 20cm in Tenmoku, a deep brown-black gloss glaze, with a flared shape and rolled rim, shown empty |
+| Bell Planter 20cm, Terracotta | Bell Planter 20cm in Terracotta, a warm orange satin glaze, with a flared shape and rolled rim, shown empty |
+| Bell Planter 20cm, Chalk | Bell Planter 20cm in Chalk, a soft off-white matte glaze, with a flared shape and rolled rim, shown empty |
+| Cylinder Planter 12cm, Celadon | Cylinder Planter 12cm in Celadon, a pale green gloss glaze, with straight sides, shown empty |
+| Cylinder Planter 12cm, Chalk | Cylinder Planter 12cm in Chalk, a soft off-white matte glaze, with straight sides, shown empty |
+| Bell Planter 15cm (4 glazes) | *To write once the images are regenerated to match the 20cm shape* |
+| Indoor Potting Mix 5L | Indoor Potting Mix 5L in a plain kraft paper bag, with a small pile of dark potting mix beside it |
+| Liquid Plant Food 500ml | Liquid Plant Food 500ml in a white bottle with a green cap and a plain label that says to dilute before use |
 
 ### 12. Collection description in the theme editor
 
@@ -212,11 +297,11 @@ The collection template shows only the title. To show the description, open Onli
 
 ### 13. Data checks and baseline
 
-- [ ] Each of the 5 plants has Care set and Live plant ticked. Nothing else has Live plant ticked.
-- [ ] Every planter variant has a Glaze.
-- [ ] Each collection shows the right products: 5 plants, 3 planters, 2 mix and fertiliser.
-- [ ] Test cart **$119.95**: Bell Planter 20cm + Snake Plant + Indoor Potting Mix 5L.
-- [ ] Test cart **$120.00**: Bell Planter 15cm + Snake Plant + Parlour Palm.
-- [ ] Lighthouse mobile, same conditions as the README baseline: `/products/devils-ivy`, `/` and `/collections/all`. Record the results in the README as baseline v2.
+- [x] Each of the 5 plants has Care set and Live plant True. The other 5 products have Live plant False. None is blank. (19 Oct 2026)
+- [x] Every planter variant has a Glaze, matching its Colour value. (19 Oct 2026)
+- [x] Each collection shows the right products: 5 plants, 3 planters, 2 mix and fertiliser, in admin and on the storefront. (19 Oct 2026)
+- [x] Test cart **$119.95**: Bell Planter 20cm + Snake Plant + Indoor Potting Mix 5L. (19 Oct 2026)
+- [x] Test cart **$120.00**: Bell Planter 15cm + Snake Plant + Parlour Palm. (19 Oct 2026)
+- [ ] Lighthouse mobile, same conditions as the README baseline: `/products/golden-pothos`, `/` and `/collections/all`. Record the results in the README as baseline v2.
 
 Later branches add the $120 free-shipping rate and the WA and Tasmania shipping zones.
