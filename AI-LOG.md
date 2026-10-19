@@ -102,3 +102,28 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - **Correction:** the LCP element audit has moved. In Lighthouse 13 it's under Insights → "LCP breakdown", not Diagnostics.
 
 **Outcome (accepted / changed / rejected):**
+
+---
+
+## 2026-10-19 · feat/gst-labels
+
+**What AI produced**
+
+- A trace of Horizon's tax wording: the product price block ([blocks/price.liquid:62](blocks/price.liquid)) and the cart summary ([snippets/tax-info.liquid](snippets/tax-info.liquid)).
+- A Horizon quirk: with the discount code field on (the default), the cart shows "Duties and taxes included" even when no duties apply (`tax-info.liquid:32`, `:38`).
+- 5 locale string changes to "Includes GST", D11, a README overrides row, and step 14 in `docs/admin-setup.md` (AUD on product pages).
+- Docs checked: [cart object](https://shopify.dev/docs/api/liquid/objects/cart) and [change theme wording](https://help.shopify.com/en/manual/online-store/themes/customizing-themes/language/change-wording).
+
+**What I should verify**
+
+- [x] Product page: "Includes GST." shows under the price, with a space before "Shipping calculated at checkout." if the store has a shipping policy (`blocks/price.liquid:70-73` has no space between the two strings).
+- [x] Cart drawer: "Includes GST. Shipping calculated at checkout." and no mention of duties. (Both checked in `shopify theme dev`, 19 Oct 2026.)
+- [ ] After step 14: prices on product pages show "AUD".
+- [ ] Theme Check in CI: 0 errors, 6 vendor warnings.
+
+**What AI was unsure about**
+
+- Where admin "Edit default theme content" edits are stored. Help Center doesn't say, which is one reason the locale file was chosen.
+- The customiser path to the currency code settings (flagged in step 14).
+
+**Outcome (accepted / changed / rejected):**
