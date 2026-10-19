@@ -171,7 +171,7 @@
         "border_width": 1,
         "border_opacity": 100,
         "border_color": "",
-        "border_radius": 0,
+        "border_radius": 8,
         "padding-block-start": 60,
         "padding-block-end": 60
       }
@@ -371,8 +371,8 @@
         "horizontal_alignment": "flex-start",
         "gap": 28,
         "background_color": "",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-start": 40,
+        "padding-block-end": 40
       }
     },
     "product_list_YidTcf": {
