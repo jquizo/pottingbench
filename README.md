@@ -175,6 +175,23 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 - **Reason:** the smallest change that labels prices correctly. It also stops the cart claiming duties are included.
 - **Caveat:** a real business may only say "Includes GST" once it's registered for GST. This concept store isn't (see [docs/admin-setup.md](docs/admin-setup.md#store-basics)). This isn't legal advice.
 
+### D12. Brand colours and fonts: theme settings, not code
+
+- **Options:** change the colour palette and fonts in the customiser; edit `config/settings_data.json` on the branch; or add `pb-` CSS custom properties that override Horizon's.
+- **Trade-offs:** Horizon already turns the palette into `--color-*` tokens (`snippets/color-palette.liquid:167-232`) and the fonts into `--font-*` tokens (`snippets/theme-styles-variables.liquid:163-174`), and almost every colour setting references the palette. Editing `settings_data.json` on a branch is reviewable in the PR, but it conflicts with any customiser save made before the merge, and the editor reorders keys. `pb-` overrides would be a parallel system that the customiser can't see.
+- **Decision:** customiser steps 15–17 in [docs/admin-setup.md](docs/admin-setup.md#brand-tokens-featbrand-tokens). No Liquid, CSS or locale changes. `--pb-glaze` comes in `feat/pb-glaze-accent`, where something uses it.
+- **Reason:** the merchant can keep changing the brand without a developer, and the code stays mergeable with Dwell.
+
+### D13. Fonts: two files, Horizon's `font-display: swap`
+
+- **Options:** different weights per role (closer to Dwell's look, more files) or one weight per font; keep Horizon's `swap` or change it to `optional`.
+- **Trade-offs:**
+  - Dwell downloaded 5 font files (Newsreader 300, 400, 700 and italic 400, plus Red Hat Display 500). Fraunces 400 for heading and subheading, and Work Sans 400 for body and accent, should need 2. Bold and italic faces are declared (`font_modify`), but browsers only download them when a page uses them. Work Sans 500 for the accent role would give sturdier uppercase labels for 1 more file.
+  - `swap` shows text at once in a fallback font, then swaps, which can shift layout (CLS). `optional` avoids the shift, but brand fonts may not show on a slow first visit, and it means editing 16 `font_face` calls in a core file (`snippets/theme-styles-variables.liquid:45-123`).
+  - Horizon preloads each role's font at low priority (`snippets/fonts.liquid`), so the fonts don't compete with the LCP image. Both fonts appear above the fold on every page.
+- **Decision:** Fraunces 400 and Work Sans 400 only; keep `swap` and Horizon's preloads unchanged.
+- **Reason:** the fewest font bytes with no core edits. If CLS rises above 0.05, the next step is a size-matched fallback `@font-face`.
+
 ### Spelling exceptions
 
 Our identifiers use Australian spelling. American spelling appears only where an external API requires it.
@@ -188,6 +205,14 @@ Our identifiers use Australian spelling. American spelling appears only where an
 **Product images are AI-generated with Google Gemini.** They don't show real stock. This is a concept store, and a real merchant must photograph the goods they actually sell (see D9). All images are 4:5 portrait.
 
 The images are uploaded as JPEG masters (about 2 MB each). Customers never download the masters: `image_url` requests a resized copy, and Shopify's CDN re-encodes it as WebP (or JPEG XL) for the browser. In the v2 baseline each product image arrived at 3–79 KB.
+
+## Known issues
+
+Accepted for the concept demo. Image issues are listed in [docs/admin-setup.md](docs/admin-setup.md#catalogue-and-plant-care) (11c–11e).
+
+- **Placeholder copy:** most home and footer text is Dwell's demo copy. The home hero's "unconditionally loved by our customers" breaks the copy rules (this store has no customers) and must go before anyone treats the site as real.
+- **Checkbox borders** are the text colour at 35% opacity: 2.25:1 on `#F7F7F5`, below WCAG 1.4.11's 3:1. It's a Horizon CSS token (`--opacity-35-55`), so fixing it means overriding core.
+- **Two hard-coded `#ffffff` values** don't follow the palette: the product hotspot bullseye (`templates/index.json`) and a label background on the collections list page (`templates/list-collections.json`). White on `#F7F7F5` barely shows; text inside stays readable.
 
 ## Performance baseline
 
