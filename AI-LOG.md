@@ -192,3 +192,30 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - Whether Shopify's public Horizon repository accepts bug reports.
 
 **Outcome (accepted / changed / rejected):**
+
+---
+
+## 2026-10-21 · feat/concept-labelling-pages
+
+**What AI produced**
+
+- A trace of where labels can go: the announcement block (`sections/header-announcements.liquid`), footer Text blocks (`sections/footer.liquid:106`), the policy list (`blocks/footer-policy-list.liquid`) and the password page (`layout/password.liquid:43`, no announcement bar).
+- The recommendation to do it as content, not code (README D15), with the wording in `docs/page-copy.md` and steps 18–26 in `docs/admin-setup.md`.
+- The About page, Shipping policy and Return policy wording, including the standard ACL guarantee paragraph.
+- Contrast: announcement text `#F7F7F5` on `#7D5449`, 6.05:1.
+- A predicted bug: once a shipping policy exists, the product price line may lose the space before "Shipping calculated at checkout." (`blocks/price.liquid:66-73`).
+- Docs checked: [policies](https://help.shopify.com/en/manual/checkout-settings/refund-privacy-tos), [menus](https://help.shopify.com/en/manual/online-store/menus-and-links), [password page](https://help.shopify.com/en/manual/online-store/themes/password-page), [WA Consumer Protection: "no refunds"](https://www.consumerprotection.wa.gov.au/consumer-protection/no-refunds-0). The ACCC site blocked the fetch (403).
+
+**What I should verify**
+
+- [ ] The ACL paragraph against the Competition and Consumer Regulations 2010 (AI quoted it from memory).
+- [ ] The price line spacing after step 19.
+- [ ] Steps 18–26 done, and the step 26 keyboard checks.
+
+**What AI was unsure about**
+
+- The admin labels for pages, policies, menus and hiding a block (flagged in steps 18–25).
+- Whether the menu link picker offers policies directly.
+- What Shopify's automated return template says (not used).
+
+**Outcome (accepted / changed / rejected):**
