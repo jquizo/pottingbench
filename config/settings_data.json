@@ -73,9 +73,9 @@
     "variant_button_width": "default-width-buttons",
     "content_for_index": [],
     "color_palette": {
-      "background": "#F7F7F5",
+      "background": "#f7f7f5",
       "foreground": "#111111",
-      "color1": "#7d5449",
+      "color1": "#E9E4E0",
       "color3": "#767672",
       "color4": "#d0cac4"
     }
