@@ -17,6 +17,11 @@ Copy rules: see the README decision log and `CLAUDE.md`. Every page that describ
 
 Title **About**, handle `about`.
 
+| SEO field | Text |
+|---|---|
+| Page title | About Potting Bench, a concept store |
+| Meta description | Potting Bench is a concept store, not a real business: a Shopify portfolio project for indoor plants and glazed planters in Australia. Nothing is for sale. |
+
 > **Potting Bench is a concept store, not a real business.**
 >
 > It's a portfolio project: a Shopify store for indoor plants and glazed planters in Australia, built on Shopify's Dwell theme. Nothing is for sale, and no orders are fulfilled.
