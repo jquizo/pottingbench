@@ -206,6 +206,16 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 - **Decision:** a one-selector change in place: `.variant-option__select-wrapper:has(.variant-option__select:focus-visible)`.
 - **Reason:** the smallest core diff, and it follows a pattern Horizon already uses. A client build would also report the bug to Shopify so the override can be dropped later.
 
+### D15. Concept labelling and policies: content, not code
+
+- **Options:** labels as theme content (announcement block, footer Text block, password page text) or as a `pb-` block with a locale string; shipping and returns as pages or as Shopify policies; policies from Shopify's automated templates or written by hand.
+- **Trade-offs:**
+  - A `pb-` block still has to be added in the customiser, so it can be removed just as easily. It only moves content into code.
+  - Shopify links policies in the checkout footer, and shows the shipping policy on product pages and in the cart; a page does neither ([Help Center](https://help.shopify.com/en/manual/checkout-settings/refund-privacy-tos)).
+  - Automated templates update themselves, but Shopify says they aren't legal advice, and we haven't checked their wording against the Australian Consumer Law.
+- **Decision:** theme content for the labels, an About page, and hand-written Shipping and Return policies. Wording in [docs/page-copy.md](docs/page-copy.md), steps 18–26 in [docs/admin-setup.md](docs/admin-setup.md#concept-labelling-and-pages-featconcept-labelling-pages).
+- **Reason:** no code for what is merchant content, and policy wording we control.
+
 ### Spelling exceptions
 
 Our identifiers use Australian spelling. American spelling appears only where an external API requires it.
@@ -225,6 +235,8 @@ The images are uploaded as JPEG masters (about 2 MB each). Customers never downl
 Accepted for the concept demo. Image issues are listed in [docs/admin-setup.md](docs/admin-setup.md#catalogue-and-plant-care) (11c–11e).
 
 - **Placeholder copy:** most home and footer text is Dwell's demo copy. The home hero's "unconditionally loved by our customers" breaks the copy rules (this store has no customers) and must go before anyone treats the site as real.
+- **The footer newsletter signup collects real email addresses** for a store that doesn't trade. The password page signup is hidden in step 25; the footer one stays for the demo.
+- **The shipping policy says "Free shipping from $120"** before the free-shipping rate exists. It arrives in `feat/cart-free-shipping`.
 - **The variant dropdown's border is faint:** Theme settings → Variant pickers → Variant settings → Borders is `color3` (`#E9E4E0`), 1.18:1 on `#F7F7F5`. It probably still passes WCAG 1.4.11, because the caret and the selected value identify the control, but it's weak. Fix in the customiser (choose the `#767672` swatch) *(unsure of current UI)*. That setting also colours the borders of button-style variants.
 - **Checkbox borders** are the text colour at 35% opacity: 2.25:1 on `#F7F7F5`, below WCAG 1.4.11's 3:1. It's a Horizon CSS token (`--opacity-35-55`), so fixing it means overriding core.
 - **Italic headings in placeholder copy** (`<em>` in `templates/index.json` and in "You might also like..." in `templates/product.json`) make Home and product pages download Fraunces italic (93 KiB). Remove the italic in the customiser when that copy is replaced.
