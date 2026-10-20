@@ -320,7 +320,9 @@ Customiser settings that the store relies on. Saving commits `config/settings_da
 
 Dwell reads its colours and fonts from these settings and turns them into CSS custom properties, so no code changes (README D12). Do one step at a time, **Save** after each, then `git switch main` and `git pull`.
 
-- [ ] **15. Colour palette.** Theme settings → **Color palette** *(unsure of current UI)*. The palette shows swatches, not names, so find each colour by its current hex:
+Each Save reached `main` as a `shopify[bot]` commit 2–10 minutes later (20 Oct 2026). Wait for it before checking `settings_data.json`.
+
+- [x] **15. Colour palette.** (20 Oct 2026, commits `51a2871`, `3a29be7`, `1d2f8d0`) Theme settings → **Color palette** *(unsure of current UI)*. The palette shows swatches, not names, so find each colour by its current hex:
 
   | Palette key | Current | New | Used for |
   |---|---|---|---|
@@ -330,9 +332,13 @@ Dwell reads its colours and fonts from these settings and turns them into CSS cu
 
   Leave `color1` (`#7D5449`) and `color3` (`#E9E4E0`) as they are. Check: the page background is off-white and body text is near-black.
 
-- [ ] **16. Input field borders.** Theme settings → **Input fields** → **Borders** → choose the `#767672` palette swatch *(unsure of current UI)*. It's currently `#E9E4E0`, which is 1.18:1 against the page and fails WCAG 1.4.11 (3:1 for form field edges). `#767672` gives 4.25:1. Check: the search field and the footer newsletter field have a clearly visible border.
+  ⚠️ **Match swatches by hex, never by position.** The first attempt changed `color3` instead of `color4`, which turned the footer mid-grey, and a fix by position then changed `color1`. The order of the swatches on screen wasn't recorded *(unsure of current UI)*. If you must swap values between swatches, order the edits so no two swatches ever share a hex.
 
-- [ ] **17. Fonts.** Theme settings → **Typography** → Fonts *(unsure of current UI)*:
+  Check `config/settings_data.json` on `main` afterwards: `"color_palette"` should read `#f7f7f5`, `#111111`, `#7D5449`, `#E9E4E0`, `#767672` (case doesn't matter).
+
+- [x] **16. Input field borders.** (20 Oct 2026, commit `44f5102`) Theme settings → **Input fields** → **Borders** → choose the `#767672` palette swatch *(unsure of current UI)*. It's currently `#E9E4E0`, which is 1.18:1 against the page and fails WCAG 1.4.11 (3:1 for form field edges). `#767672` gives 4.25:1. Check: the search field and the footer newsletter field have a clearly visible border. In `settings_data.json`: `"palette_input_border": "{{ settings.color_palette.color4 }}"`. Picking a swatch that's already selected saves nothing, so no commit appears.
+
+- [x] **17. Fonts.** (20 Oct 2026, commit `9fb6988`) Theme settings → **Typography** → Fonts *(unsure of current UI)*:
 
   | Role | Now | New |
   |---|---|---|
@@ -341,4 +347,4 @@ Dwell reads its colours and fonts from these settings and turns them into CSS cu
   | Body | Newsreader Regular (400) | **Work Sans** Regular (400) |
   | Accent | Red Hat Display Medium (500) | **Work Sans** Regular (400) |
 
-  Use the same weight for both roles of each font: that's what keeps it to 2 font files (README D13). Leave the heading-level font settings (H1–H6) as they are. Check: headings are in Fraunces, and body text, the menu and uppercase labels are in Work Sans.
+  Use the same weight for both roles of each font: that's what keeps it to 2 font files (README D13). Leave the heading-level font settings (H1–H6) as they are. Check: headings are in Fraunces, and body text, the menu and uppercase labels are in Work Sans. In `settings_data.json`: `fraunces_n4` for heading and subheading, `work_sans_n4` for body and accent.
