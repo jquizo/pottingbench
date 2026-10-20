@@ -348,3 +348,25 @@ Each Save reached `main` as a `shopify[bot]` commit 2–10 minutes later (20 Oct
   | Accent | Red Hat Display Medium (500) | **Work Sans** Regular (400) |
 
   Use the same weight for both roles of each font: that's what keeps it to 2 font files (README D13). Leave the heading-level font settings (H1–H6) as they are. Check: headings are in Fraunces, and body text, the menu and uppercase labels are in Work Sans. In `settings_data.json`: `fraunces_n4` for heading and subheading, `work_sans_n4` for body and accent.
+
+## Concept labelling and pages (`feat/concept-labelling-pages`)
+
+All wording is in [page-copy.md](page-copy.md). No code changes (README D15). Do the steps in order: the page and policies must exist before menus and links point to them.
+
+Steps 22–25 are customiser saves on **pottingbench/main**: each commits to `main` as `shopify[bot]` 2–10 minutes later. Then `git switch main` and `git pull`.
+
+- [ ] **18. About page.** Online Store → Pages → **Add page** *(unsure of current UI)*. Title **About**, content from page-copy.md, Visibility **Visible**, Theme template **Default page**. Check the URL handle is `about` under Search engine listing. **Save.** Check: `/pages/about` shows the page.
+- [ ] **19. Shipping policy.** Settings → Policies → **Shipping policy**. Leave **Use automated policy** off. Paste the text from page-copy.md, then **Save**. Check:
+  - `/policies/shipping-policy` shows it;
+  - the Bell Planter 20cm price line: is there a space in "Includes GST. Shipping calculated at checkout."? AI expects the space to be missing (`blocks/price.liquid:66-73`). Report what you see.
+- [ ] **20. Return policy.** Settings → Policies → **Return policy** *(may be labelled "Return and refund policy")*. Automated policy off. Paste, **Save**. Check: the footer shows **Terms and policies**, and its popover lists both policies.
+- [ ] **21. Menus.** Content → Menus → **Add menu** *(unsure of current UI)*:
+  - **Customer care**: Shipping policy, Return policy (look for a Policies option in the link picker);
+  - **Information**: About.
+- [ ] **22. Footer menus.** Customise → Footer → the **CUSTOMER CARE** menu block → Menu: **Customer care**; the **INFORMATION** menu block → Menu: **Information** *(unsure of current UI)*. **Save.**
+- [ ] **23. Footer label.** Customise → Footer → add a **Text** block in the group with the logo *(unsure of current UI)*, with the footer text from page-copy.md. **Save.** Check: it shows on every page, below the logo.
+- [ ] **24. Announcement bar.** Customise → Header → Announcement bar → the announcement block: replace the text, set the link to the About page. **Save.** Check: the bar reads "Concept store, not a real business" and goes to `/pages/about`.
+- [ ] **25. Password page.** Customise → page selector → **Password** ([Help Center](https://help.shopify.com/en/manual/online-store/themes/password-page)): replace "Opening soon" and the paragraph below with the password page text, and hide the **Email signup** block (the eye icon) *(unsure of current UI)*. **Save.** Check: log out of the storefront, or open a private window, and look at the password page.
+- [ ] **26. Checks.**
+  - Keyboard: Tab to the announcement link, the footer menus and **Terms and policies**. The popover opens, its links are reachable, and Escape closes it.
+  - The label shows in the announcement bar and footer on Home, a product page and a collection page.
