@@ -355,7 +355,7 @@ All wording is in [page-copy.md](page-copy.md). No code changes (README D15). Do
 
 Steps 22–25 are customiser saves on **pottingbench/main**: each commits to `main` as `shopify[bot]` 2–10 minutes later. Then `git switch main` and `git pull`.
 
-- [ ] **18. About page.** Online Store → Pages → **Add page** *(unsure of current UI)*. Title **About**, content from page-copy.md, Visibility **Visible**, Theme template **Default page**. Check the URL handle is `about` under Search engine listing. **Save.** Check: `/pages/about` shows the page.
+- [x] **18. About page.** (21 Oct 2026, with the SEO title and meta description from page-copy.md.) Online Store → Pages → **Add page** *(unsure of current UI)*. Title **About**, content from page-copy.md, Visibility **Visible**, Theme template **Default page**. Check the URL handle is `about` under Search engine listing. **Save.** Check: `/pages/about` shows the page.
 - [ ] **19. Shipping policy.** Settings → Policies → **Shipping policy**. Leave **Use automated policy** off. Paste the text from page-copy.md, then **Save**. Check:
   - `/policies/shipping-policy` shows it;
   - the Bell Planter 20cm price line: is there a space in "Includes GST. Shipping calculated at checkout."? AI expects the space to be missing (`blocks/price.liquid:66-73`). Report what you see.
