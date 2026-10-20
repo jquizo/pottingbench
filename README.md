@@ -175,6 +175,23 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 - **Reason:** the smallest change that labels prices correctly. It also stops the cart claiming duties are included.
 - **Caveat:** a real business may only say "Includes GST" once it's registered for GST. This concept store isn't (see [docs/admin-setup.md](docs/admin-setup.md#store-basics)). This isn't legal advice.
 
+### D12. Brand colours and fonts: theme settings, not code
+
+- **Options:** change the colour palette and fonts in the customiser; edit `config/settings_data.json` on the branch; or add `pb-` CSS custom properties that override Horizon's.
+- **Trade-offs:** Horizon already turns the palette into `--color-*` tokens (`snippets/color-palette.liquid:167-232`) and the fonts into `--font-*` tokens (`snippets/theme-styles-variables.liquid:163-174`), and almost every colour setting references the palette. Editing `settings_data.json` on a branch is reviewable in the PR, but it conflicts with any customiser save made before the merge, and the editor reorders keys. `pb-` overrides would be a parallel system that the customiser can't see.
+- **Decision:** customiser steps 15–17 in [docs/admin-setup.md](docs/admin-setup.md#brand-tokens-featbrand-tokens). No Liquid, CSS or locale changes. `--pb-glaze` comes in `feat/pb-glaze-accent`, where something uses it.
+- **Reason:** the merchant can keep changing the brand without a developer, and the code stays mergeable with Dwell.
+
+### D13. Fonts: two files, Horizon's `font-display: swap`
+
+- **Options:** different weights per role (closer to Dwell's look, more files) or one weight per font; keep Horizon's `swap` or change it to `optional`.
+- **Trade-offs:**
+  - Dwell preloads 3 font files (Newsreader 300 and 400, Red Hat Display 500), and pages also use Newsreader bold 700 (every page) and an italic (Home and the planter page): 4–5 theme font files per page, about 230–310 KiB (v3 before-runs). Fraunces 400 for heading and subheading, and Work Sans 400 for body and accent, cut the preloaded files to 2. Bold and italic faces are declared (`font_modify`) and browsers download them only when a page uses them, so expect one bold file on every page and an italic where content uses one. Work Sans 500 for the accent role would give sturdier uppercase labels for 1 more file.
+  - `swap` shows text at once in a fallback font, then swaps, which can shift layout (CLS). `optional` avoids the shift, but brand fonts may not show on a slow first visit, and it means editing 16 `font_face` calls in a core file (`snippets/theme-styles-variables.liquid:45-123`).
+  - Horizon preloads each role's font at low priority (`snippets/fonts.liquid`), so the fonts don't compete with the LCP image. Both fonts appear above the fold on every page.
+- **Decision:** Fraunces 400 and Work Sans 400 as the base fonts; keep `swap` and Horizon's preloads unchanged.
+- **Reason:** the fewest font bytes with no core edits. If CLS rises above 0.05, the next step is a size-matched fallback `@font-face`.
+
 ### Spelling exceptions
 
 Our identifiers use Australian spelling. American spelling appears only where an external API requires it.
@@ -188,6 +205,16 @@ Our identifiers use Australian spelling. American spelling appears only where an
 **Product images are AI-generated with Google Gemini.** They don't show real stock. This is a concept store, and a real merchant must photograph the goods they actually sell (see D9). All images are 4:5 portrait.
 
 The images are uploaded as JPEG masters (about 2 MB each). Customers never download the masters: `image_url` requests a resized copy, and Shopify's CDN re-encodes it as WebP (or JPEG XL) for the browser. In the v2 baseline each product image arrived at 3–79 KB.
+
+## Known issues
+
+Accepted for the concept demo. Image issues are listed in [docs/admin-setup.md](docs/admin-setup.md#catalogue-and-plant-care) (11c–11e).
+
+- **Placeholder copy:** most home and footer text is Dwell's demo copy. The home hero's "unconditionally loved by our customers" breaks the copy rules (this store has no customers) and must go before anyone treats the site as real.
+- **The variant dropdown's focus outline is invisible** (WCAG 2.4.7). Tab does reach the Colour dropdown (Down arrow changes it), but Horizon draws the outline outside the select (`snippets/variant-picker-styles.liquid:52-55`) and the wrapper's `overflow: clip` (`:34`) cuts it off. Vendor code, found in the `feat/brand-tokens` keyboard test; fix in `fix/variant-select-focus`.
+- **Checkbox borders** are the text colour at 35% opacity: 2.25:1 on `#F7F7F5`, below WCAG 1.4.11's 3:1. It's a Horizon CSS token (`--opacity-35-55`), so fixing it means overriding core.
+- **Italic headings in placeholder copy** (`<em>` in `templates/index.json` and in "You might also like..." in `templates/product.json`) make Home and product pages download Fraunces italic (93 KiB). Remove the italic in the customiser when that copy is replaced.
+- **Two hard-coded `#ffffff` values** don't follow the palette: the product hotspot bullseye (`templates/index.json`) and a label background on the collections list page (`templates/list-collections.json`). White on `#F7F7F5` barely shows; text inside stays readable.
 
 ## Performance baseline
 
@@ -239,3 +266,32 @@ Notes:
 - **Collection:** the LCP card image has no `fetchpriority=high`, and the cards download 635 px images for 403 px slots (Lighthouse estimates 114 KiB of savings). This is Horizon card behaviour *(cause unconfirmed)*.
 - **Product pages:** CLS is now 0. v1's 0.105 no longer appears; the cause wasn't investigated.
 - **Cart drawer:** not re-measured. Re-measure it before `feat/cart-free-shipping`.
+
+### v3: `feat/brand-tokens` (fonts and palette)
+
+Same tool and settings as v2 (Lighthouse 13.4.1, Chrome 155, mobile, Navigation, simulated throttling). **One run per page**, by choice, to ship faster, so treat score changes under about 5 points as noise. Font files and bytes don't vary between runs, so they're the main evidence for this feature.
+
+Theme font bytes are the uncompressed size (`resourceSize`). Some runs served the preloaded fonts from cache (0 KB transferred) even with storage reset on, so transfer size isn't comparable. GT Standard (64 KB, `shop-assets/static_uploads/shoplift/`) is excluded: it isn't loaded by the theme *(source unconfirmed)*.
+
+| Page | When | Score | LCP | CLS | TBT | Theme font files | Theme font KiB | LCP element |
+|---|---|---|---|---|---|---|---|---|
+| Home `/` | Before (20 Oct 2026) | 69 | 9.2 s | 0 | 80 ms | 5: Newsreader 300, 400, 700, italic 300; Red Hat Display 500 | 308 | Image: new hero |
+| Home `/` | **After** (20 Oct 2026) | 79 | 5.0 s | 0 | 70 ms | 4: Fraunces 400, italic 400; Work Sans 400, 700 | **214** | Image: hero |
+| Planter `/products/bell-planter-20cm` | Before (20 Oct 2026) | 72 | 5.0 s | 0 | 320 ms | 5: Newsreader 300, 400, 700, italic 400; Red Hat Display 500 | 307 | Image: first product photo |
+| Planter `/products/bell-planter-20cm` | **After** (20 Oct 2026) | 89 | 3.3 s | 0 | 80 ms | 4: Fraunces 400, italic 400; Work Sans 400, 700 | **214** | Image: first product photo |
+| Collection `/collections/all` | Before (20 Oct 2026) | 68 | 6.2 s | 0 | 360 ms | 4: Newsreader 300, 400, 700; Red Hat Display 500 | 230 | Image: first product card |
+| Collection `/collections/all` | **After** (20 Oct 2026) | 78 | 4.6 s | 0 | 180 ms | 3: Fraunces 400; Work Sans 400, 700 | **122** | Image: first product card |
+
+Notes on the before-runs:
+
+- **Home isn't comparable with v2.** The hero image added in the customiser (`e66f7dd`) is now the LCP element. It's 32 KB, has `fetchpriority=high`, isn't lazy-loaded, and finished loading about 1.1 s in the observed trace, so the 9.2 s is the simulation's estimate under network contention, not a slow image.
+- **Planter and Collection scored 8–9 points below v2** with no theme code changes, and TBT roughly doubled. That's single-run variance, and it's why the before-runs were repeated rather than reusing v2.
+- **Bold and italic are used:** Newsreader 700 loads at high priority on every page, and an italic loads on Home and the planter page. The new fonts will need a bold file too.
+
+Notes on the after-runs:
+
+- **Fonts: one fewer file and 94–108 KiB less on every page** (Home and Planter 308 → 214 KiB, −31%; Collection 230 → 122 KiB, −47%). Each preloaded file was requested once, so the 4 preload tags for 2 URLs aren't a problem.
+- **The bold file is Work Sans 700** (23 KiB), at high priority on every page, as expected from `font_modify` on the body font.
+- **Fraunces italic 400 (93 KiB) is now the largest font file.** It loads only where a heading contains `<em>`: Dwell's placeholder copy on Home (`templates/index.json`) and "You might also like..." on product pages (`templates/product.json`). Removing that italic in the customiser would save another 93 KiB on those pages. Optional, so it's a known issue.
+- **CLS stayed at 0** on all three pages, so the `swap` to Fraunces and Work Sans didn't move the layout.
+- **Scores rose 10–17 points and TBT fell, but don't credit it all to fonts.** These are single runs, the fonts load at low priority, and TBT is script time that fonts don't affect. The font bytes and file counts are the reliable result; the scores only show that nothing got worse.
