@@ -211,6 +211,7 @@ The images are uploaded as JPEG masters (about 2 MB each). Customers never downl
 Accepted for the concept demo. Image issues are listed in [docs/admin-setup.md](docs/admin-setup.md#catalogue-and-plant-care) (11c–11e).
 
 - **Placeholder copy:** most home and footer text is Dwell's demo copy. The home hero's "unconditionally loved by our customers" breaks the copy rules (this store has no customers) and must go before anyone treats the site as real.
+- **The variant dropdown's focus outline is invisible** (WCAG 2.4.7). Tab does reach the Colour dropdown (Down arrow changes it), but Horizon draws the outline outside the select (`snippets/variant-picker-styles.liquid:52-55`) and the wrapper's `overflow: clip` (`:34`) cuts it off. Vendor code, found in the `feat/brand-tokens` keyboard test; fix in `fix/variant-select-focus`.
 - **Checkbox borders** are the text colour at 35% opacity: 2.25:1 on `#F7F7F5`, below WCAG 1.4.11's 3:1. It's a Horizon CSS token (`--opacity-35-55`), so fixing it means overriding core.
 - **Italic headings in placeholder copy** (`<em>` in `templates/index.json` and in "You might also like..." in `templates/product.json`) make Home and product pages download Fraunces italic (93 KiB). Remove the italic in the customiser when that copy is replaced.
 - **Two hard-coded `#ffffff` values** don't follow the palette: the product hotspot bullseye (`templates/index.json`) and a label background on the collections list page (`templates/list-collections.json`). White on `#F7F7F5` barely shows; text inside stays readable.

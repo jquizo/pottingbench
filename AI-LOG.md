@@ -148,7 +148,7 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - [x] After step 17: the preloaded fonts are Fraunces 400 and Work Sans 400, and each file is requested once (4 preload tags point at 2 URLs). Checked in the after-run reports, 20 Oct 2026.
 - [x] One bold file loads on every page: Work Sans 700 (23 KiB). Fraunces italic 400 (93 KiB) loads on Home and the planter page, triggered by `<em>` in Dwell's placeholder headings.
 - [x] CLS stays at or below the before-runs after the font swap (0 on all three pages).
-- [ ] Keyboard: focus outlines are visible on `#F7F7F5` and on the `#111111` buttons.
+- [x] Keyboard: skip link, header, search (Escape returns focus) and Add to cart show visible focus on `#F7F7F5` and `#111111` (20 Oct 2026). **Found:** the Colour dropdown's focus outline is invisible (Horizon's `overflow: clip`). Fix in `fix/variant-select-focus`.
 - [x] Uppercase accent labels (menu, H4, H6, badges) still read well at weight 400 (you checked, 20 Oct 2026).
 - [x] Lighthouse before-runs, 1 run per page (your choice): Home, Bell Planter 20cm, `/collections/all` (20 Oct 2026). AI extracted the numbers from the JSON reports.
 - [x] Lighthouse after-runs with the same settings (20 Oct 2026): theme fonts 308 → 214 KiB (Home, Planter) and 230 → 122 KiB (Collection).
