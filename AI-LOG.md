@@ -209,7 +209,7 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 **What I should verify**
 
 - [ ] The ACL paragraph against the Competition and Consumer Regulations 2010 (AI quoted it from memory).
-- [ ] The price line spacing after step 19.
+- [x] The price line spacing after step 19: **no bug** (21 Oct 2026). AI's prediction from the Liquid whitespace tags was wrong; what adds the space wasn't investigated.
 - [ ] Steps 18–26 done, and the step 26 keyboard checks.
 
 **What AI was unsure about**
