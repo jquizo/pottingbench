@@ -81,6 +81,7 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 | File | Change | Reason | PR |
 |---|---|---|---|
 | `locales/en.default.json` | 5 `content.*` tax strings say "Includes GST" instead of "Taxes included" or "Duties and taxes included": `taxes_included`, `taxes_included_shipping_at_checkout_without_policy`, `taxes_included_shipping_at_checkout_with_policy_html`, `duties_and_taxes_included_shipping_at_checkout_without_policy_without_discounts`, `duties_and_taxes_included_shipping_at_checkout_with_policy_without_discounts_html` | Australian GST labelling. Horizon's cart shows the "duties" strings whenever the discount code field is on (`snippets/tax-info.liquid:32`, `:38`). On a Dwell update, keep our values for these 5 keys. See D11. | `feat/gst-labels` |
+| `snippets/variant-picker-styles.liquid` | The `:focus-visible` rule at `:52-56` moves from `.variant-option__select` to `.variant-option__select-wrapper:has(.variant-option__select:focus-visible)`, with a one-line comment | The wrapper's `overflow: clip` (`:34`) hid the dropdown's focus ring (WCAG 2.4.7). On a Dwell update, keep this selector unless Dwell has fixed the bug. See D14. | `fix/variant-select-focus` |
 
 ## Decision log
 
@@ -192,6 +193,19 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 - **Decision:** Fraunces 400 and Work Sans 400 as the base fonts; keep `swap` and Horizon's preloads unchanged.
 - **Reason:** the fewest font bytes with no core edits. If CLS rises above 0.05, the next step is a size-matched fallback `@font-face`.
 
+### D14. Variant dropdown focus ring: draw it on the wrapper
+
+- **Options:** move the outline from the `<select>` to its wrapper; a negative `outline-offset` on the select; remove the wrapper's `overflow: clip`; `overflow-clip-margin` on the wrapper; or a separate `pb-` stylesheet.
+- **Trade-offs:**
+  - The wrapper's `overflow: clip` (`snippets/variant-picker-styles.liquid:34`) cuts off anything its children draw outside it, including the select's outline. An element's own outline isn't clipped by its own `overflow`, so an outline on the wrapper shows. Horizon already does this for button-style variants (`:367-373`, with `overflow: clip` at `:210`).
+  - A negative offset puts the ring over the text, unlike every other control.
+  - The clip stops the select's square background (on hover, `:48-50`) painting past the wrapper's rounded corners. Removing it is invisible at our 0 px input radius, but breaks if the radius is raised in the customiser.
+  - Horizon's own comment (`:228`) says `overflow-clip-margin` doesn't work in Safari.
+  - A `pb-` stylesheet still needs a core edit to load it, and depends on the order of the compiled CSS.
+  - `:has(:focus-visible)` keeps the ring for keyboard focus, like Horizon. `:focus-within` would also show it on mouse clicks.
+- **Decision:** a one-selector change in place: `.variant-option__select-wrapper:has(.variant-option__select:focus-visible)`.
+- **Reason:** the smallest core diff, and it follows a pattern Horizon already uses. A client build would also report the bug to Shopify so the override can be dropped later.
+
 ### Spelling exceptions
 
 Our identifiers use Australian spelling. American spelling appears only where an external API requires it.
@@ -211,7 +225,7 @@ The images are uploaded as JPEG masters (about 2 MB each). Customers never downl
 Accepted for the concept demo. Image issues are listed in [docs/admin-setup.md](docs/admin-setup.md#catalogue-and-plant-care) (11c–11e).
 
 - **Placeholder copy:** most home and footer text is Dwell's demo copy. The home hero's "unconditionally loved by our customers" breaks the copy rules (this store has no customers) and must go before anyone treats the site as real.
-- **The variant dropdown's focus outline is invisible** (WCAG 2.4.7). Tab does reach the Colour dropdown (Down arrow changes it), but Horizon draws the outline outside the select (`snippets/variant-picker-styles.liquid:52-55`) and the wrapper's `overflow: clip` (`:34`) cuts it off. Vendor code, found in the `feat/brand-tokens` keyboard test; fix in `fix/variant-select-focus`.
+- **The variant dropdown's border is faint:** Theme settings → Variant pickers → Variant settings → Borders is `color3` (`#E9E4E0`), 1.18:1 on `#F7F7F5`. It probably still passes WCAG 1.4.11, because the caret and the selected value identify the control, but it's weak. Fix in the customiser (choose the `#767672` swatch) *(unsure of current UI)*. That setting also colours the borders of button-style variants.
 - **Checkbox borders** are the text colour at 35% opacity: 2.25:1 on `#F7F7F5`, below WCAG 1.4.11's 3:1. It's a Horizon CSS token (`--opacity-35-55`), so fixing it means overriding core.
 - **Italic headings in placeholder copy** (`<em>` in `templates/index.json` and in "You might also like..." in `templates/product.json`) make Home and product pages download Fraunces italic (93 KiB). Remove the italic in the customiser when that copy is replaced.
 - **Two hard-coded `#ffffff` values** don't follow the palette: the product hotspot bullseye (`templates/index.json`) and a label background on the collections list page (`templates/list-collections.json`). White on `#F7F7F5` barely shows; text inside stays readable.
