@@ -145,12 +145,13 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 
 **What I should verify**
 
-- [ ] After step 17, Network panel: only Fraunces 400 and Work Sans 400 download on Home, and each file is requested once (4 preload tags point at 2 URLs).
-- [ ] Bold or italic files appear only on pages that use bold or italic text.
+- [ ] After step 17, Network panel: the preloaded fonts are Fraunces 400 and Work Sans 400, and each file is requested once (4 preload tags point at 2 URLs).
+- [ ] One bold file loads on every page (the before-runs showed Newsreader 700 everywhere), and an italic only where content uses one. Note which family the bold comes from.
 - [ ] CLS stays at or below the before-runs after the font swap.
 - [ ] Keyboard: focus outlines are visible on `#F7F7F5` and on the `#111111` buttons.
 - [ ] Uppercase accent labels (menu, H4, H6, badges) still read well at weight 400. If not, try Work Sans 500 (one more file).
-- [ ] Lighthouse before and after, median of 3: Home, Bell Planter 20cm, `/collections/all`.
+- [x] Lighthouse before-runs, 1 run per page (your choice): Home, Bell Planter 20cm, `/collections/all` (20 Oct 2026). AI extracted the numbers from the JSON reports.
+- [ ] Lighthouse after-runs with the same settings.
 
 **What AI was unsure about**
 

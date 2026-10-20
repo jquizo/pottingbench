@@ -186,10 +186,10 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 
 - **Options:** different weights per role (closer to Dwell's look, more files) or one weight per font; keep Horizon's `swap` or change it to `optional`.
 - **Trade-offs:**
-  - Dwell downloaded 5 font files (Newsreader 300, 400, 700 and italic 400, plus Red Hat Display 500). Fraunces 400 for heading and subheading, and Work Sans 400 for body and accent, should need 2. Bold and italic faces are declared (`font_modify`), but browsers only download them when a page uses them. Work Sans 500 for the accent role would give sturdier uppercase labels for 1 more file.
+  - Dwell preloads 3 font files (Newsreader 300 and 400, Red Hat Display 500), and pages also use Newsreader bold 700 (every page) and an italic (Home and the planter page): 4–5 theme font files per page, about 230–310 KiB (v3 before-runs). Fraunces 400 for heading and subheading, and Work Sans 400 for body and accent, cut the preloaded files to 2. Bold and italic faces are declared (`font_modify`) and browsers download them only when a page uses them, so expect one bold file on every page and an italic where content uses one. Work Sans 500 for the accent role would give sturdier uppercase labels for 1 more file.
   - `swap` shows text at once in a fallback font, then swaps, which can shift layout (CLS). `optional` avoids the shift, but brand fonts may not show on a slow first visit, and it means editing 16 `font_face` calls in a core file (`snippets/theme-styles-variables.liquid:45-123`).
   - Horizon preloads each role's font at low priority (`snippets/fonts.liquid`), so the fonts don't compete with the LCP image. Both fonts appear above the fold on every page.
-- **Decision:** Fraunces 400 and Work Sans 400 only; keep `swap` and Horizon's preloads unchanged.
+- **Decision:** Fraunces 400 and Work Sans 400 as the base fonts; keep `swap` and Horizon's preloads unchanged.
 - **Reason:** the fewest font bytes with no core edits. If CLS rises above 0.05, the next step is a size-matched fallback `@font-face`.
 
 ### Spelling exceptions
@@ -264,3 +264,21 @@ Notes:
 - **Collection:** the LCP card image has no `fetchpriority=high`, and the cards download 635 px images for 403 px slots (Lighthouse estimates 114 KiB of savings). This is Horizon card behaviour *(cause unconfirmed)*.
 - **Product pages:** CLS is now 0. v1's 0.105 no longer appears; the cause wasn't investigated.
 - **Cart drawer:** not re-measured. Re-measure it before `feat/cart-free-shipping`.
+
+### v3: `feat/brand-tokens` (fonts and palette)
+
+Same tool and settings as v2 (Lighthouse 13.4.1, Chrome 155, mobile, Navigation, simulated throttling). **One run per page**, by choice, to ship faster, so treat score changes under about 5 points as noise. Font files and bytes don't vary between runs, so they're the main evidence for this feature.
+
+Theme font bytes are the uncompressed size (`resourceSize`). Some runs served the preloaded fonts from cache (0 KB transferred) even with storage reset on, so transfer size isn't comparable. GT Standard (64 KB, `shop-assets/static_uploads/shoplift/`) is excluded: it isn't loaded by the theme *(source unconfirmed)*.
+
+| Page | When | Score | LCP | CLS | TBT | Theme font files | Theme font KiB | LCP element |
+|---|---|---|---|---|---|---|---|---|
+| Home `/` | Before (20 Oct 2026) | 69 | 9.2 s | 0 | 80 ms | 5: Newsreader 300, 400, 700, italic 300; Red Hat Display 500 | 308 | Image: new hero |
+| Planter `/products/bell-planter-20cm` | Before (20 Oct 2026) | 72 | 5.0 s | 0 | 320 ms | 5: Newsreader 300, 400, 700, italic 400; Red Hat Display 500 | 307 | Image: first product photo |
+| Collection `/collections/all` | Before (20 Oct 2026) | 68 | 6.2 s | 0 | 360 ms | 4: Newsreader 300, 400, 700; Red Hat Display 500 | 230 | Image: first product card |
+
+Notes on the before-runs:
+
+- **Home isn't comparable with v2.** The hero image added in the customiser (`e66f7dd`) is now the LCP element. It's 32 KB, has `fetchpriority=high`, isn't lazy-loaded, and finished loading about 1.1 s in the observed trace, so the 9.2 s is the simulation's estimate under network contention, not a slow image.
+- **Planter and Collection scored 8–9 points below v2** with no theme code changes, and TBT roughly doubled. That's single-run variance, and it's why the before-runs were repeated rather than reusing v2.
+- **Bold and italic are used:** Newsreader 700 loads at high priority on every page, and an italic loads on Home and the planter page. The new fonts will need a bold file too.
