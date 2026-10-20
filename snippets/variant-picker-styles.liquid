@@ -49,7 +49,8 @@
     background-color: var(--color-variant-hover-background);
   }
 
-  .variant-option__select:focus-visible {
+  /* PB override (README overrides): ring on the wrapper, because its overflow: clip hides an outline on the select */
+  .variant-option__select-wrapper:has(.variant-option__select:focus-visible) {
     outline: var(--focus-outline-width) solid currentcolor;
     outline-offset: var(--focus-outline-offset);
   }
