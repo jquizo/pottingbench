@@ -175,13 +175,14 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 
 **What I should verify**
 
-- [ ] Keyboard: Tab to the Colour dropdown (Bell Planter 20cm) and the Size dropdown (Golden Pothos). A dark ring shows on all four sides, at desktop and mobile widths.
-- [ ] The ring doesn't touch the option label above it (the ring extends about 4.7 px and the gap is 4.8 px).
-- [ ] Hovering while focused keeps the ring visible.
-- [ ] What a mouse click on the dropdown does: ring or no ring. Either is acceptable; record which.
-- [ ] The sticky add-to-cart bar doesn't cover the focused dropdown (WCAG 2.4.11).
-- [ ] Theme editor (development theme from `shopify theme dev`): the variant picker block still renders and its settings still apply.
-- [ ] Theme Check in CI: 0 errors, 6 vendor warnings.
+- [x] Keyboard: Tab to the Colour dropdown (Bell Planter 20cm) and the Size dropdown (Golden Pothos). A dark ring shows on all four sides, at desktop and mobile widths.
+- [x] The ring doesn't touch the option label above it (the ring extends about 4.7 px and the gap is 4.8 px).
+- [x] Hovering while focused keeps the ring visible.
+- [x] What a mouse click on the dropdown does: **the ring shows on a mouse click too.** Acceptable: it's the browser's own `:focus-visible` choice for a `<select>`, not something the fix added (why the browser matches on a click wasn't checked).
+- [x] The sticky add-to-cart bar doesn't cover the focused dropdown (WCAG 2.4.11).
+- [x] Theme editor (development theme from `shopify theme dev`): the variant picker block still renders and its settings still apply.
+- [x] Theme Check: 0 errors, 6 vendor warnings (local run, 20 Oct 2026). PR #6 merged 21 Oct 2026.
+- All checks above were reported done on 21 Oct 2026.
 
 **What AI was unsure about**
 
