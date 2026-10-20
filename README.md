@@ -212,6 +212,7 @@ Accepted for the concept demo. Image issues are listed in [docs/admin-setup.md](
 
 - **Placeholder copy:** most home and footer text is Dwell's demo copy. The home hero's "unconditionally loved by our customers" breaks the copy rules (this store has no customers) and must go before anyone treats the site as real.
 - **Checkbox borders** are the text colour at 35% opacity: 2.25:1 on `#F7F7F5`, below WCAG 1.4.11's 3:1. It's a Horizon CSS token (`--opacity-35-55`), so fixing it means overriding core.
+- **Italic headings in placeholder copy** (`<em>` in `templates/index.json` and in "You might also like..." in `templates/product.json`) make Home and product pages download Fraunces italic (93 KiB). Remove the italic in the customiser when that copy is replaced.
 - **Two hard-coded `#ffffff` values** don't follow the palette: the product hotspot bullseye (`templates/index.json`) and a label background on the collections list page (`templates/list-collections.json`). White on `#F7F7F5` barely shows; text inside stays readable.
 
 ## Performance baseline
@@ -274,11 +275,22 @@ Theme font bytes are the uncompressed size (`resourceSize`). Some runs served th
 | Page | When | Score | LCP | CLS | TBT | Theme font files | Theme font KiB | LCP element |
 |---|---|---|---|---|---|---|---|---|
 | Home `/` | Before (20 Oct 2026) | 69 | 9.2 s | 0 | 80 ms | 5: Newsreader 300, 400, 700, italic 300; Red Hat Display 500 | 308 | Image: new hero |
+| Home `/` | **After** (20 Oct 2026) | 79 | 5.0 s | 0 | 70 ms | 4: Fraunces 400, italic 400; Work Sans 400, 700 | **214** | Image: hero |
 | Planter `/products/bell-planter-20cm` | Before (20 Oct 2026) | 72 | 5.0 s | 0 | 320 ms | 5: Newsreader 300, 400, 700, italic 400; Red Hat Display 500 | 307 | Image: first product photo |
+| Planter `/products/bell-planter-20cm` | **After** (20 Oct 2026) | 89 | 3.3 s | 0 | 80 ms | 4: Fraunces 400, italic 400; Work Sans 400, 700 | **214** | Image: first product photo |
 | Collection `/collections/all` | Before (20 Oct 2026) | 68 | 6.2 s | 0 | 360 ms | 4: Newsreader 300, 400, 700; Red Hat Display 500 | 230 | Image: first product card |
+| Collection `/collections/all` | **After** (20 Oct 2026) | 78 | 4.6 s | 0 | 180 ms | 3: Fraunces 400; Work Sans 400, 700 | **122** | Image: first product card |
 
 Notes on the before-runs:
 
 - **Home isn't comparable with v2.** The hero image added in the customiser (`e66f7dd`) is now the LCP element. It's 32 KB, has `fetchpriority=high`, isn't lazy-loaded, and finished loading about 1.1 s in the observed trace, so the 9.2 s is the simulation's estimate under network contention, not a slow image.
 - **Planter and Collection scored 8–9 points below v2** with no theme code changes, and TBT roughly doubled. That's single-run variance, and it's why the before-runs were repeated rather than reusing v2.
 - **Bold and italic are used:** Newsreader 700 loads at high priority on every page, and an italic loads on Home and the planter page. The new fonts will need a bold file too.
+
+Notes on the after-runs:
+
+- **Fonts: one fewer file and 94–108 KiB less on every page** (Home and Planter 308 → 214 KiB, −31%; Collection 230 → 122 KiB, −47%). Each preloaded file was requested once, so the 4 preload tags for 2 URLs aren't a problem.
+- **The bold file is Work Sans 700** (23 KiB), at high priority on every page, as expected from `font_modify` on the body font.
+- **Fraunces italic 400 (93 KiB) is now the largest font file.** It loads only where a heading contains `<em>`: Dwell's placeholder copy on Home (`templates/index.json`) and "You might also like..." on product pages (`templates/product.json`). Removing that italic in the customiser would save another 93 KiB on those pages. Optional, so it's a known issue.
+- **CLS stayed at 0** on all three pages, so the `swap` to Fraunces and Work Sans didn't move the layout.
+- **Scores rose 10–17 points and TBT fell, but don't credit it all to fonts.** These are single runs, the fonts load at low priority, and TBT is script time that fonts don't affect. The font bytes and file counts are the reliable result; the scores only show that nothing got worse.

@@ -145,18 +145,18 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 
 **What I should verify**
 
-- [ ] After step 17, Network panel: the preloaded fonts are Fraunces 400 and Work Sans 400, and each file is requested once (4 preload tags point at 2 URLs).
-- [ ] One bold file loads on every page (the before-runs showed Newsreader 700 everywhere), and an italic only where content uses one. Note which family the bold comes from.
-- [ ] CLS stays at or below the before-runs after the font swap.
+- [x] After step 17: the preloaded fonts are Fraunces 400 and Work Sans 400, and each file is requested once (4 preload tags point at 2 URLs). Checked in the after-run reports, 20 Oct 2026.
+- [x] One bold file loads on every page: Work Sans 700 (23 KiB). Fraunces italic 400 (93 KiB) loads on Home and the planter page, triggered by `<em>` in Dwell's placeholder headings.
+- [x] CLS stays at or below the before-runs after the font swap (0 on all three pages).
 - [ ] Keyboard: focus outlines are visible on `#F7F7F5` and on the `#111111` buttons.
-- [ ] Uppercase accent labels (menu, H4, H6, badges) still read well at weight 400. If not, try Work Sans 500 (one more file).
+- [x] Uppercase accent labels (menu, H4, H6, badges) still read well at weight 400 (you checked, 20 Oct 2026).
 - [x] Lighthouse before-runs, 1 run per page (your choice): Home, Bell Planter 20cm, `/collections/all` (20 Oct 2026). AI extracted the numbers from the JSON reports.
-- [ ] Lighthouse after-runs with the same settings.
+- [x] Lighthouse after-runs with the same settings (20 Oct 2026): theme fonts 308 → 214 KiB (Home, Planter) and 230 → 122 KiB (Collection).
 
 **What AI was unsure about**
 
 - The customiser labels for the colour palette, input field borders and fonts (flagged in steps 15–17). The setting names came from `locales/en.default.schema.json`.
-- Whether Chrome fetches a font once when two preload tags point at the same URL.
+- The on-screen order of the palette swatches. AI gave positions in file order without flagging strongly enough that the screen might differ, and two saves changed the wrong swatch (fixed in `1d2f8d0`). Steps now say to match by hex.
 - The fallback fonts Shopify lists for Fraunces and Work Sans (`font.fallback_families`), and so how much the swap shifts layout.
 
 **Outcome (accepted / changed / rejected):**
