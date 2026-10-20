@@ -160,3 +160,34 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - The fallback fonts Shopify lists for Fraunces and Work Sans (`font.fallback_families`), and so how much the swap shifts layout.
 
 **Outcome (accepted / changed / rejected):**
+
+---
+
+## 2026-10-21 · fix/variant-select-focus
+
+**What AI produced**
+
+- A trace of the bug: the select's focus outline (`snippets/variant-picker-styles.liquid:52-55`) is drawn outside the select, and the wrapper's `overflow: clip` (`:34`) cuts it off. `assets/base.css:235-238` gives every element the same outline, so it's clipped too.
+- A check of `:210`: no bug. It's the button-style variant label, which draws its ring on itself (`:367-373`), and an element's own `overflow` doesn't clip its own outline. That's the pattern the fix copies. (The brief called `:210` the swatch dropdown; the swatch dropdown is the same wrapper, `:38`, so this fix covers it.)
+- The fix: one selector change plus a comment, a README overrides row, D14, and the known-issues update.
+- A new finding, logged as a known issue: the dropdown's border is `#E9E4E0`, 1.18:1 on the page.
+- Docs: none from Shopify needed (CSS only). WCAG [Understanding 2.4.7](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html) and [Understanding 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html), cited from memory.
+
+**What I should verify**
+
+- [ ] Keyboard: Tab to the Colour dropdown (Bell Planter 20cm) and the Size dropdown (Golden Pothos). A dark ring shows on all four sides, at desktop and mobile widths.
+- [ ] The ring doesn't touch the option label above it (the ring extends about 4.7 px and the gap is 4.8 px).
+- [ ] Hovering while focused keeps the ring visible.
+- [ ] What a mouse click on the dropdown does: ring or no ring. Either is acceptable; record which.
+- [ ] The sticky add-to-cart bar doesn't cover the focused dropdown (WCAG 2.4.11).
+- [ ] Theme editor (development theme from `shopify theme dev`): the variant picker block still renders and its settings still apply.
+- [ ] Theme Check in CI: 0 errors, 6 vendor warnings.
+
+**What AI was unsure about**
+
+- How browsers apply `:focus-visible` to a `<select>` clicked with the mouse.
+- Whether Safari now supports `overflow-clip-margin`. AI relied on Horizon's own comment (`:228`) and didn't check.
+- The customiser path to the variant border setting (Theme settings → Variant pickers → Variant settings → Borders, taken from `config/settings_schema.json` and the schema locale).
+- Whether Shopify's public Horizon repository accepts bug reports.
+
+**Outcome (accepted / changed / rejected):**
