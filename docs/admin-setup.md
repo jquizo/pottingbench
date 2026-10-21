@@ -359,7 +359,7 @@ Steps 22–25 are customiser saves on **pottingbench/main**: each commits to `ma
 - [x] **19. Shipping policy.** (21 Oct 2026. The price line kept its space: "Includes GST. Shipping calculated at checkout.") Settings → Policies → **Shipping policy**. Leave **Use automated policy** off. Paste the text from page-copy.md, then **Save**. Check:
   - `/policies/shipping-policy` shows it;
   - the Bell Planter 20cm price line: is there a space in "Includes GST. Shipping calculated at checkout."? AI expects the space to be missing (`blocks/price.liquid:66-73`). Report what you see.
-- [x] **20. Return policy.** (22 Oct 2026) Settings → Policies → **Return policy** *(may be labelled "Return and refund policy")*. Automated policy off. Paste, **Save**. Check: the footer shows **Terms and policies**, and its popover lists both policies.
+- [ ] **20. Return policy.** Settings → Policies → **Return policy** *(may be labelled "Return and refund policy")*. Automated policy off. Paste, **Save**. Check: the footer shows **Terms and policies**, and its popover lists both policies.
 - [ ] **21. Menus.** Content → Menus → **Add menu** *(unsure of current UI)*:
   - **Customer care**: Shipping policy, Return policy (look for a Policies option in the link picker);
   - **Information**: About.
