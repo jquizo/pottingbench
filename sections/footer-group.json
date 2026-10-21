@@ -324,7 +324,7 @@
                 },
                 "group_CpwfV9": {
                   "type": "group",
-                  "name": "t:names.menu",
+                  "name": "Customer care",
                   "settings": {
                     "content_direction": "row",
                     "vertical_on_mobile": true,
@@ -403,7 +403,7 @@
                 },
                 "group_KrgHqm": {
                   "type": "group",
-                  "name": "t:names.menu",
+                  "name": "Information",
                   "settings": {
                     "content_direction": "row",
                     "vertical_on_mobile": true,
@@ -445,7 +445,7 @@
                       "type": "menu",
                       "name": "t:names.menu",
                       "settings": {
-                        "menu": "",
+                        "menu": "information",
                         "heading": "INFORMATION",
                         "menu_spacing": 12,
                         "show_as_accordion": false,
