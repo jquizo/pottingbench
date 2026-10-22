@@ -204,6 +204,7 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - The About page, Shipping policy and Return policy wording, including the standard ACL guarantee paragraph.
 - Contrast: announcement text `#F7F7F5` on `#7D5449`, 6.05:1. You then changed the bar to `#111111` (22 Oct 2026, intentional): `#F7F7F5` on `#111111`, 17.60:1 (`snippets/contrast-override.liquid:59-83` picks the lightest palette colour).
 - **Correction:** the docs said the About page handle was `about`. The store's is `about-us` (found in step 24).
+- **Correction:** AI planned step 25 (password page) without checking dev store limits. On a dev store the theme's password page doesn't control access ([development stores](https://shopify.dev/docs/api/development-stores)), so the step was skipped.
 - A predicted bug: once a shipping policy exists, the product price line may lose the space before "Shipping calculated at checkout." (`blocks/price.liquid:66-73`).
 - Docs checked: [policies](https://help.shopify.com/en/manual/checkout-settings/refund-privacy-tos), [menus](https://help.shopify.com/en/manual/online-store/menus-and-links), [password page](https://help.shopify.com/en/manual/online-store/themes/password-page), [WA Consumer Protection: "no refunds"](https://www.consumerprotection.wa.gov.au/consumer-protection/no-refunds-0). The ACCC site blocked the fetch (403).
 

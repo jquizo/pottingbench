@@ -10,8 +10,8 @@ Copy rules: see the README decision log and `CLAUDE.md`. Every page that describ
 |---|---|---|
 | Announcement bar | Concept store, not a real business | `/pages/about-us` |
 | Footer Text block | Concept store, not a real business. Product images are AI-generated. | none |
-| Password page heading | Potting Bench is a concept store | none |
-| Password page paragraph | It's not a real business and nothing is for sale. It's a Shopify theme portfolio project. | none |
+| Password page heading *(not used: step 25 skipped)* | Potting Bench is a concept store | none |
+| Password page paragraph *(not used: step 25 skipped)* | It's not a real business and nothing is for sale. It's a Shopify theme portfolio project. | none |
 
 ## About page
 

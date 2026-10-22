@@ -235,7 +235,7 @@ The images are uploaded as JPEG masters (about 2 MB each). Customers never downl
 Accepted for the concept demo. Image issues are listed in [docs/admin-setup.md](docs/admin-setup.md#catalogue-and-plant-care) (11c–11e).
 
 - **Placeholder copy:** most home and footer text is Dwell's demo copy. The home hero's "unconditionally loved by our customers" breaks the copy rules (this store has no customers) and must go before anyone treats the site as real.
-- **The footer newsletter signup collects real email addresses** for a store that doesn't trade. The password page signup is hidden in step 25; the footer one stays for the demo.
+- **The footer newsletter signup collects real email addresses** for a store that doesn't trade. It stays for the demo. The password page template still has its signup (step 25 skipped: on a dev store the theme's password page doesn't control access).
 - **The shipping policy says "Free shipping from $120"** before the free-shipping rate exists. It arrives in `feat/cart-free-shipping`.
 - **The variant dropdown's border is faint:** Theme settings → Variant pickers → Variant settings → Borders is `color3` (`#E9E4E0`), 1.18:1 on `#F7F7F5`. It probably still passes WCAG 1.4.11, because the caret and the selected value identify the control, but it's weak. Fix in the customiser (choose the `#767672` swatch) *(unsure of current UI)*. That setting also colours the borders of button-style variants.
 - **Checkbox borders** are the text colour at 35% opacity: 2.25:1 on `#F7F7F5`, below WCAG 1.4.11's 3:1. It's a Horizon CSS token (`--opacity-35-55`), so fixing it means overriding core.
