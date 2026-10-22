@@ -202,7 +202,8 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - A trace of where labels can go: the announcement block (`sections/header-announcements.liquid`), footer Text blocks (`sections/footer.liquid:106`), the policy list (`blocks/footer-policy-list.liquid`) and the password page (`layout/password.liquid:43`, no announcement bar).
 - The recommendation to do it as content, not code (README D15), with the wording in `docs/page-copy.md` and steps 18–26 in `docs/admin-setup.md`.
 - The About page, Shipping policy and Return policy wording, including the standard ACL guarantee paragraph.
-- Contrast: announcement text `#F7F7F5` on `#7D5449`, 6.05:1.
+- Contrast: announcement text `#F7F7F5` on `#7D5449`, 6.05:1. You then changed the bar to `#111111` (22 Oct 2026, intentional): `#F7F7F5` on `#111111`, 17.60:1 (`snippets/contrast-override.liquid:59-83` picks the lightest palette colour).
+- **Correction:** the docs said the About page handle was `about`. The store's is `about-us` (found in step 24).
 - A predicted bug: once a shipping policy exists, the product price line may lose the space before "Shipping calculated at checkout." (`blocks/price.liquid:66-73`).
 - Docs checked: [policies](https://help.shopify.com/en/manual/checkout-settings/refund-privacy-tos), [menus](https://help.shopify.com/en/manual/online-store/menus-and-links), [password page](https://help.shopify.com/en/manual/online-store/themes/password-page), [WA Consumer Protection: "no refunds"](https://www.consumerprotection.wa.gov.au/consumer-protection/no-refunds-0). The ACCC site blocked the fetch (403).
 
