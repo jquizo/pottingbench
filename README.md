@@ -216,6 +216,13 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 - **Decision:** theme content for the labels, an About page, and hand-written Shipping and Return policies. Wording in [docs/page-copy.md](docs/page-copy.md), steps 18–26 in [docs/admin-setup.md](docs/admin-setup.md#concept-labelling-and-pages-featconcept-labelling-pages).
 - **Reason:** no code for what is merchant content, and policy wording we control.
 
+### D16. New locale keys in English only; MatchingTranslations off
+
+- **Options:** a script that copies each new `pb-` key, in English, into the other 55 locale files; turn off Theme Check's `MatchingTranslations`; or delete the non-English locale files.
+- **Trade-offs:** `MatchingTranslations` fails CI when a key exists in `en.default` but not in the other locale files (352 errors for the care label). Shopify advises against turning it off ([MatchingTranslations](https://shopify.dev/docs/storefronts/themes/tools/theme-check/checks/matching-translations)), but the store is English-only, so shoppers never see those files. Copying the keys edits 55 vendor files on every feature that adds text. Deleting the files causes modify/delete conflicts on every Dwell update.
+- **Decision:** `MatchingTranslations: enabled: false` in `.theme-check.yml`. New keys go in `locales/en.default.json` and `locales/en.default.schema.json` only.
+- **Reason:** the simplest fix for an English-only store, with no vendor locale edits. A multilingual merchant would keep the check on and add each new key to every locale, using translators or Shopify's Translate & Adapt app.
+
 ### Spelling exceptions
 
 Our identifiers use Australian spelling. American spelling appears only where an external API requires it.

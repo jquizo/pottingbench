@@ -1,2 +1,6 @@
 # https://shopify.dev/docs/storefronts/themes/tools/theme-check/configuration
 extends: theme-check:recommended
+
+# English-only store: the other locale files are never shown, so pb- keys live in the en files only. See README D16.
+MatchingTranslations:
+  enabled: false
