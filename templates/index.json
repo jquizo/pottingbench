@@ -839,7 +839,7 @@
         "overlay_style": "solid",
         "gradient_direction": "to top",
         "section_width": "full-width",
-        "section_height": "16 / 9",
+        "section_height": "21 / 9",
         "hotspot_color": "#ffffff57",
         "bullseye_color": "#ffffff",
         "background_color": "{{ settings.color_palette.background }}",
