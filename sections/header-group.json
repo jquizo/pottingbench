@@ -18,7 +18,7 @@
           "type": "_announcement",
           "settings": {
             "text": "&nbsp;Concept store, not a real business&nbsp;",
-            "link": "shopify://collections/all",
+            "link": "shopify://pages/about-us",
             "font": "var(--font-accent--family)",
             "font_size": "0.75rem",
             "weight": "",

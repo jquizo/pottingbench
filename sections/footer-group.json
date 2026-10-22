@@ -189,7 +189,7 @@
                   "type": "text",
                   "name": "t:names.text",
                   "settings": {
-                    "text": "<p>Concept store, not a real business.&nbsp;</p>",
+                    "text": "<p>Concept store, not a real business.</p>",
                     "width": "fit-content",
                     "max_width": "normal",
                     "alignment": "left",
