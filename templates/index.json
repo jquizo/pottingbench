@@ -769,6 +769,16 @@
     "product_hotspots_RzCyE8": {
       "type": "product-hotspots",
       "blocks": {
+        "hotspot_product_qxV9rk": {
+          "type": "_hotspot-product",
+          "name": "Golden Pothos",
+          "settings": {
+            "product": "golden-pothos",
+            "x-position": 83,
+            "y-position": 50
+          },
+          "blocks": {}
+        },
         "hotspot_product_qLcTTX": {
           "type": "_hotspot-product",
           "settings": {
@@ -817,17 +827,19 @@
         }
       },
       "block_order": [
+        "hotspot_product_qxV9rk",
         "hotspot_product_qLcTTX",
         "hotspot_product_KKDhz4"
       ],
       "name": "t:names.product_hotspots",
       "settings": {
+        "image": "shopify://shop_images/indoor-plants-collection-on-wooden-shelf.jpg",
         "toggle_overlay": false,
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
         "section_width": "full-width",
-        "section_height": "auto",
+        "section_height": "16 / 9",
         "hotspot_color": "#ffffff57",
         "bullseye_color": "#ffffff",
         "background_color": "{{ settings.color_palette.background }}",
