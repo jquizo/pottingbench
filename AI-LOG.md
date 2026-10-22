@@ -212,7 +212,9 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 
 - [ ] The ACL paragraph against the Competition and Consumer Regulations 2010 (AI quoted it from memory).
 - [x] The price line spacing after step 19: **no bug** (21 Oct 2026). AI's prediction from the Liquid whitespace tags was wrong; what adds the space wasn't investigated.
-- [ ] Steps 18–26 done, and the step 26 keyboard checks.
+- [x] Steps 18–24 and 26 done, step 25 skipped (22 Oct 2026).
+- [x] Step 26 keyboard checks: the announcement link, footer menus and Terms and policies (opens, links reachable, Escape closes, focus returns), plus the labels on Home, a product page and a collection page (22 Oct 2026).
+- [x] The focused link inside the policy popover: **clearly visible.** AI predicted a faint tint of about 1.4:1 (`blocks/footer-policy-list.liquid:67`, `:72-74`); that was wrong, and why wasn't investigated.
 
 **What AI was unsure about**
 
