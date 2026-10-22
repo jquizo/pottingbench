@@ -769,6 +769,36 @@
     "product_hotspots_RzCyE8": {
       "type": "product-hotspots",
       "blocks": {
+        "hotspot_product_UApezb": {
+          "type": "_hotspot-product",
+          "name": "Snake plant",
+          "settings": {
+            "product": "snake-plant",
+            "x-position": 17,
+            "y-position": 62
+          },
+          "blocks": {}
+        },
+        "hotspot_product_qLcTTX": {
+          "type": "_hotspot-product",
+          "name": "Parlour palm",
+          "settings": {
+            "product": "parlour-palm",
+            "x-position": 38,
+            "y-position": 60
+          },
+          "blocks": {}
+        },
+        "hotspot_product_KKDhz4": {
+          "type": "_hotspot-product",
+          "name": "Peace lily",
+          "settings": {
+            "product": "peace-lily",
+            "x-position": 60,
+            "y-position": 60
+          },
+          "blocks": {}
+        },
         "hotspot_product_qxV9rk": {
           "type": "_hotspot-product",
           "name": "Golden Pothos",
@@ -776,24 +806,6 @@
             "product": "golden-pothos",
             "x-position": 83,
             "y-position": 50
-          },
-          "blocks": {}
-        },
-        "hotspot_product_qLcTTX": {
-          "type": "_hotspot-product",
-          "settings": {
-            "product": "",
-            "x-position": 40,
-            "y-position": 40
-          },
-          "blocks": {}
-        },
-        "hotspot_product_KKDhz4": {
-          "type": "_hotspot-product",
-          "settings": {
-            "product": "",
-            "x-position": 60,
-            "y-position": 60
           },
           "blocks": {}
         },
@@ -827,9 +839,10 @@
         }
       },
       "block_order": [
-        "hotspot_product_qxV9rk",
+        "hotspot_product_UApezb",
         "hotspot_product_qLcTTX",
-        "hotspot_product_KKDhz4"
+        "hotspot_product_KKDhz4",
+        "hotspot_product_qxV9rk"
       ],
       "name": "t:names.product_hotspots",
       "settings": {
