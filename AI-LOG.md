@@ -175,13 +175,14 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 
 **What I should verify**
 
-- [ ] Keyboard: Tab to the Colour dropdown (Bell Planter 20cm) and the Size dropdown (Golden Pothos). A dark ring shows on all four sides, at desktop and mobile widths.
-- [ ] The ring doesn't touch the option label above it (the ring extends about 4.7 px and the gap is 4.8 px).
-- [ ] Hovering while focused keeps the ring visible.
-- [ ] What a mouse click on the dropdown does: ring or no ring. Either is acceptable; record which.
-- [ ] The sticky add-to-cart bar doesn't cover the focused dropdown (WCAG 2.4.11).
-- [ ] Theme editor (development theme from `shopify theme dev`): the variant picker block still renders and its settings still apply.
-- [ ] Theme Check in CI: 0 errors, 6 vendor warnings.
+- [x] Keyboard: Tab to the Colour dropdown (Bell Planter 20cm) and the Size dropdown (Golden Pothos). A dark ring shows on all four sides, at desktop and mobile widths.
+- [x] The ring doesn't touch the option label above it (the ring extends about 4.7 px and the gap is 4.8 px).
+- [x] Hovering while focused keeps the ring visible.
+- [x] What a mouse click on the dropdown does: **the ring shows on a mouse click too.** Acceptable: it's the browser's own `:focus-visible` choice for a `<select>`, not something the fix added (why the browser matches on a click wasn't checked).
+- [x] The sticky add-to-cart bar doesn't cover the focused dropdown (WCAG 2.4.11).
+- [x] Theme editor (development theme from `shopify theme dev`): the variant picker block still renders and its settings still apply.
+- [x] Theme Check: 0 errors, 6 vendor warnings (local run, 20 Oct 2026). PR #6 merged 21 Oct 2026.
+- All checks above were reported done on 21 Oct 2026.
 
 **What AI was unsure about**
 
@@ -189,5 +190,36 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - Whether Safari now supports `overflow-clip-margin`. AI relied on Horizon's own comment (`:228`) and didn't check.
 - The customiser path to the variant border setting (Theme settings → Variant pickers → Variant settings → Borders, taken from `config/settings_schema.json` and the schema locale).
 - Whether Shopify's public Horizon repository accepts bug reports.
+
+**Outcome (accepted / changed / rejected):**
+
+---
+
+## 2026-10-21 · feat/concept-labelling-pages
+
+**What AI produced**
+
+- A trace of where labels can go: the announcement block (`sections/header-announcements.liquid`), footer Text blocks (`sections/footer.liquid:106`), the policy list (`blocks/footer-policy-list.liquid`) and the password page (`layout/password.liquid:43`, no announcement bar).
+- The recommendation to do it as content, not code (README D15), with the wording in `docs/page-copy.md` and steps 18–26 in `docs/admin-setup.md`.
+- The About page, Shipping policy and Return policy wording, including the standard ACL guarantee paragraph.
+- Contrast: announcement text `#F7F7F5` on `#7D5449`, 6.05:1. You then changed the bar to `#111111` (22 Oct 2026, intentional): `#F7F7F5` on `#111111`, 17.60:1 (`snippets/contrast-override.liquid:59-83` picks the lightest palette colour).
+- **Correction:** the docs said the About page handle was `about`. The store's is `about-us` (found in step 24).
+- **Correction:** AI planned step 25 (password page) without checking dev store limits. On a dev store the theme's password page doesn't control access ([development stores](https://shopify.dev/docs/api/development-stores)), so the step was skipped.
+- A predicted bug: once a shipping policy exists, the product price line may lose the space before "Shipping calculated at checkout." (`blocks/price.liquid:66-73`).
+- Docs checked: [policies](https://help.shopify.com/en/manual/checkout-settings/refund-privacy-tos), [menus](https://help.shopify.com/en/manual/online-store/menus-and-links), [password page](https://help.shopify.com/en/manual/online-store/themes/password-page), [WA Consumer Protection: "no refunds"](https://www.consumerprotection.wa.gov.au/consumer-protection/no-refunds-0). The ACCC site blocked the fetch (403).
+
+**What I should verify**
+
+- [ ] The ACL paragraph against the Competition and Consumer Regulations 2010 (AI quoted it from memory).
+- [x] The price line spacing after step 19: **no bug** (21 Oct 2026). AI's prediction from the Liquid whitespace tags was wrong; what adds the space wasn't investigated.
+- [x] Steps 18–24 and 26 done, step 25 skipped (22 Oct 2026).
+- [x] Step 26 keyboard checks: the announcement link, footer menus and Terms and policies (opens, links reachable, Escape closes, focus returns), plus the labels on Home, a product page and a collection page (22 Oct 2026).
+- [x] The focused link inside the policy popover: **clearly visible.** AI predicted a faint tint of about 1.4:1 (`blocks/footer-policy-list.liquid:67`, `:72-74`); that was wrong, and why wasn't investigated.
+
+**What AI was unsure about**
+
+- The admin labels for pages, policies, menus and hiding a block (flagged in steps 18–25).
+- Whether the menu link picker offers policies directly.
+- What Shopify's automated return template says (not used).
 
 **Outcome (accepted / changed / rejected):**
