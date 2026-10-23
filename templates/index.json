@@ -15,7 +15,7 @@
         "text_R8G8Tf": {
           "type": "text",
           "settings": {
-            "text": "<h1>Indoor plants &&nbsp;Glazed planters</h1>",
+            "text": "<h2>Indoor plants &&nbsp;Glazed planters</h2>",
             "width": "fit-content",
             "max_width": "narrow",
             "alignment": "center",
