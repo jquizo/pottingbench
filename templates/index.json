@@ -15,7 +15,7 @@
         "text_R8G8Tf": {
           "type": "text",
           "settings": {
-            "text": "<h2>Indoor plants &&nbsp;Glazed planters</h2>",
+            "text": "<h2>Indoor plants &&nbsp;glazed planters</h2>",
             "width": "fit-content",
             "max_width": "narrow",
             "alignment": "center",
@@ -215,7 +215,7 @@
                 "text_MwteJg": {
                   "type": "text",
                   "settings": {
-                    "text": "<h2>A Care label on every plant</h2>",
+                    "text": "<h2>A care label on every plant</h2>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "center",
