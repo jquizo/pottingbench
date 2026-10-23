@@ -11,6 +11,7 @@ Click-by-click steps to rebuild the Potting Bench dev store from this repo. Thes
 | Metaobject and metafield definitions | Settings → Metafields and metaobjects. Metafield definitions are listed per resource (Products, Variants, …). Metaobject definitions are further down the same page. |
 | Metaobject entries | Content (left sidebar) → Metaobjects → Glaze → Add entry |
 | Theme editor | Online Store → Themes → Edit theme |
+| Add a block to the product page | Theme editor → page selector → **Products → Default product** → **Product information** → expand **Details** → **Add block** → category (for example **Product**). Checked 23 Oct 2026 on the development theme. |
 
 ## Store basics
 
@@ -370,3 +371,12 @@ Steps 22–24 are customiser saves on **pottingbench/main**: each commits to `ma
 - [x] **26. Checks.** (22 Oct 2026, all passed. The focused link inside the Terms and policies popover is clearly visible.)
   - Keyboard: Tab to the announcement link, the footer menus and **Terms and policies**. The popover opens, its links are reachable, and Escape closes it.
   - The label shows in the announcement bar and footer on Home, a product page and a collection page.
+
+## Care label (`feat/pb-care-label`)
+
+**After the `feat/pb-care-label` pull request is merged.** The block exists on `main` only after the merge, so it won't be in the live theme's block list before then (README D17). The same steps were tested on the development theme on 23 Oct 2026.
+
+- [ ] **27. Add the Care label block.** Online Store → Themes → **pottingbench/main** → Customise → page selector → **Products → Default product** → **Product information** → expand **Details** → **Add block** → **Product** → **Care label**. Drag it between **Buy buttons** and **Accordion**. **Save.**
+  - The preview opens on Bell Planter 15cm, which has no care entry, so it shows only the grey editor hint. That's expected; customers see nothing there.
+  - Saving commits `templates/product.json` to `main` as `shopify[bot]` 2–10 minutes later. Check the commit adds one `pb-care-label` block inside `product-details` and changes nothing else you didn't expect, then `git switch main` and `git pull`.
+  - Check on the storefront: Golden Pothos shows the Plant care heading, the botanical name and 5 rows; Parlour Palm shows "Non-toxic to cats and dogs"; Bell Planter 15cm shows nothing between Add to cart and the accordion.
