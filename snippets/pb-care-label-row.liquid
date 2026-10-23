@@ -1,0 +1,16 @@
+{% doc %}
+  Renders one row of the care label. Renders nothing when the value is blank.
+
+  @param {string} label - Row label, already translated
+  @param {string} value - Field value from the Plant care entry
+
+  @example
+  {% render 'pb-care-label-row', label: light_label, value: care.light.value %}
+{% enddoc %}
+
+{%- if value != blank -%}
+  <div class="pb-care-label__row">
+    <dt class="pb-care-label__label">{{ label }}</dt>
+    <dd class="pb-care-label__value">{{ value | escape }}</dd>
+  </div>
+{%- endif -%}

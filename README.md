@@ -40,6 +40,13 @@ shopify theme dev --store potting-bench.myshopify.com
 shopify theme check
 ```
 
+The links in `shopify theme dev`'s output (checked 23 Oct 2026, CLI 4.8.5):
+
+- `http://127.0.0.1:9292` is a **preview only**; you can't edit there.
+- **[3]** opens the development theme in the theme editor. Its top bar says **Draft**. Saves there stay on the development theme and never reach `main`.
+- The **share preview** link (`?preview_theme_id=…`) shows the saved development theme as customers see it, without editor-only content.
+- Editor saves don't change your local files unless `theme dev` runs with `--theme-editor-sync`. Don't add it: it would write editor-owned JSON into the feature branch.
+
 The Shopify GitHub integration deploys `main` to the connected theme, and theme editor saves commit back to `main`. Work on a branch and merge through a pull request. CI runs Theme Check on every pull request and on pushes to `main`, and fails on errors only.
 
 ### Keeping local files in sync
@@ -82,6 +89,7 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 |---|---|---|---|
 | `locales/en.default.json` | 5 `content.*` tax strings say "Includes GST" instead of "Taxes included" or "Duties and taxes included": `taxes_included`, `taxes_included_shipping_at_checkout_without_policy`, `taxes_included_shipping_at_checkout_with_policy_html`, `duties_and_taxes_included_shipping_at_checkout_without_policy_without_discounts`, `duties_and_taxes_included_shipping_at_checkout_with_policy_without_discounts_html` | Australian GST labelling. Horizon's cart shows the "duties" strings whenever the discount code field is on (`snippets/tax-info.liquid:32`, `:38`). On a Dwell update, keep our values for these 5 keys. See D11. | `feat/gst-labels` |
 | `snippets/variant-picker-styles.liquid` | The `:focus-visible` rule at `:52-56` moves from `.variant-option__select` to `.variant-option__select-wrapper:has(.variant-option__select:focus-visible)`, with a one-line comment | The wrapper's `overflow: clip` (`:34`) hid the dropdown's focus ring (WCAG 2.4.7). On a Dwell update, keep this selector unless Dwell has fixed the bug. See D14. | `fix/variant-select-focus` |
+| `locales/en.default.json`, `locales/en.default.schema.json` | A top-level `pb_care_label` group appended at the end of each file. No existing key changed. | Storefront and schema strings for the care label block. English files only (D16). On a Dwell update, keep the group if the end of the file conflicts. | `feat/pb-care-label` |
 
 ## Decision log
 
@@ -216,6 +224,26 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 - **Decision:** theme content for the labels, an About page, and hand-written Shipping and Return policies. Wording in [docs/page-copy.md](docs/page-copy.md), steps 18–26 in [docs/admin-setup.md](docs/admin-setup.md#concept-labelling-and-pages-featconcept-labelling-pages).
 - **Reason:** no code for what is merchant content, and policy wording we control.
 
+### D16. New locale keys in English only; MatchingTranslations off
+
+- **Options:** a script that copies each new `pb-` key, in English, into the other 55 locale files; turn off Theme Check's `MatchingTranslations`; or delete the non-English locale files.
+- **Trade-offs:** `MatchingTranslations` fails CI when a key exists in `en.default` but not in the other locale files (352 errors for the care label). Shopify advises against turning it off ([MatchingTranslations](https://shopify.dev/docs/storefronts/themes/tools/theme-check/checks/matching-translations)), but the store is English-only, so shoppers never see those files. Copying the keys edits 55 vendor files on every feature that adds text. Deleting the files causes modify/delete conflicts on every Dwell update.
+- **Decision:** `MatchingTranslations: enabled: false` in `.theme-check.yml`. New keys go in `locales/en.default.json` and `locales/en.default.schema.json` only.
+- **Reason:** the simplest fix for an English-only store, with no vendor locale edits. A multilingual merchant would keep the check on and add each new key to every locale, using translators or Shopify's Translate & Adapt app.
+
+### D17. Care label: one theme block reading the Plant care metaobject
+
+- **Options:**
+  - one `pb-care-label` theme block, or Horizon's Text blocks connected to each care field as dynamic sources;
+  - `<dl>`, `<ul>` or `<table>` markup;
+  - add the block to `templates/product.json` on the branch, or in the customiser after the merge.
+- **Trade-offs:**
+  - Separate Text blocks need no code, but it takes six per template, the labels and tag style aren't reusable, and a heading would still show on planters *(not tested)*. One block keeps the labels, order and style together, and renders nothing when `custom.care` is empty (`blocks/pb-care-label.liquid:16`).
+  - Each row is a label and a value, which is what a description list (`<dt>`, `<dd>`) means. A table adds headers nobody needs, and a `<ul>` loses the pairing.
+  - `templates/product.json` is editor-owned: committing it on the branch conflicts with any customiser save before the merge (as in D12).
+- **Decision:** a `pb-care-label` block with a `pb-care-label-row` snippet, `<dl>` markup, colour through `contrast-override`, added in the customiser after the merge (step 27). The botanical name uses the heading font but isn't italic.
+- **Reason:** it follows Horizon's own block pattern (`blocks/sku.liquid:7` for `closest.product`, `blocks/_collection-info.liquid:4-8` for colour), keeps the merchant in control of placement, and avoids loading Fraunces italic (93 KiB).
+
 ### Spelling exceptions
 
 Our identifiers use Australian spelling. American spelling appears only where an external API requires it.
@@ -321,3 +349,9 @@ Notes on the after-runs:
 - **Fraunces italic 400 (93 KiB) is now the largest font file.** It loads only where a heading contains `<em>`: Dwell's placeholder copy on Home (`templates/index.json`) and "You might also like..." on product pages (`templates/product.json`). Removing that italic in the customiser would save another 93 KiB on those pages. Optional, so it's a known issue.
 - **CLS stayed at 0** on all three pages, so the `swap` to Fraunces and Work Sans didn't move the layout.
 - **Scores rose 10–17 points and TBT fell, but don't credit it all to fonts.** These are single runs, the fonts load at low priority, and TBT is script time that fonts don't affect. The font bytes and file counts are the reliable result; the scores only show that nothing got worse.
+
+### Feature changes since v3
+
+| Feature | Effect | Why |
+|---|---|---|
+| `feat/pb-care-label` | Expected no change, not measured (agreed) | Server-rendered text, no JavaScript, no new font files (botanical name not italic), about 1 KB of block CSS |

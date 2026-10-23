@@ -223,3 +223,47 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - What Shopify's automated return template says (not used).
 
 **Outcome (accepted / changed / rejected):**
+
+---
+
+## 2026-10-23 · feat/pb-care-label
+
+**What AI produced**
+
+- A trace of the Horizon patterns the block copies: `@theme` blocks in product details (`blocks/_product-details.liquid:80-83`), `closest.product` (`blocks/sku.liquid:7`), per-block colour through `contrast-override` (`blocks/_collection-info.liquid:4-8`), inline `{% stylesheet %}` (`blocks/product-inventory.liquid:85-115`).
+- `blocks/pb-care-label.liquid` and `snippets/pb-care-label-row.liquid`: heading, botanical name, a `<dl>` with one row per filled-in field, an editor-only hint, Horizon tokens and logical properties. Locale keys in the two English files.
+- The MatchingTranslations fix: AI first recommended copying the keys into all 55 other locale files; after your push-back (the store is English-only) it changed to turning the check off (README D16).
+- D17, step 27, the README "Run locally" notes, the overrides row, and the 7 tests below, each explained before you ran it.
+- Contrast, WCAG 2.x formula, `--opacity-muted-text` 0.6 (`snippets/theme-styles-variables.liquid:399`):
+
+  | Colours | Text | Labels (60%, 12 px) | Left edge | Row outline (20%, decorative) |
+  |---|---|---|---|---|
+  | Page (`#111111` on `#F7F7F5`) | 17.60:1 | 4.83:1 | 17.60:1 | 1.55:1 |
+  | Block background `#111111` (text auto `#F7F7F5`) | 17.60:1 | 6.79:1 | 17.60:1 | 1.79:1 |
+
+  The outline doesn't need 3:1: the left edge and the text identify each row. A merchant-chosen text colour skips the automatic contrast (`snippets/contrast-override.liquid:72-74`), so it's their responsibility.
+- Docs checked: [Theme Check configuration](https://shopify.dev/docs/storefronts/themes/tools/theme-check/configuration), [MatchingTranslations](https://shopify.dev/docs/storefronts/themes/tools/theme-check/checks/matching-translations).
+
+**What I should verify**
+
+- [x] Test 1: the preset is under Product; the planter and the potting mix show only the editor hint; all 5 plants show their rows; only Parlour Palm says "Non-toxic to cats and dogs"; the botanical name isn't italic (23 Oct 2026).
+- [x] Test 2: reorder, remove and undo in the editor.
+- [x] Test 3: heading (changed and empty), Show botanical name, Show pet safety, and the pet safety help text.
+- [x] Test 4: background `#111111` with automatic text, padding 16, then reset.
+- [x] Test 5: on the saved development theme (share preview), the planter shows nothing and Golden Pothos shows the label; `git status` stayed clean.
+- [x] Test 6: Tab and Shift+Tab skip the block; the focus ring is never hidden.
+- [x] Test 7: 375 px and 320 px, no sideways scrolling.
+- [ ] Test 8, a blank Pet safety field: **skipped (your choice, demo scope).** The blank-value path in `snippets/pb-care-label-row.liquid` hasn't run.
+- [x] Theme Check locally: 0 errors, 6 vendor warnings.
+- [ ] Theme Check in CI on the pull request: 0 errors.
+- [ ] Step 27 after the merge.
+
+**What AI was unsure about**
+
+- What Liquid returns for an unset metaobject field. Still untested (test 8 skipped); the row snippet's `!= blank` treats nil and an empty string the same way.
+- `.value` on the metaobject-reference metafield returning the metaobject: **confirmed in practice** (test 1).
+- Editor UI: how to change the preview product (you found a way; not recorded), and that the development theme shows as "Draft".
+- Whether `127.0.0.1:9292` shows editor saves. Not tested; the share preview link was used instead.
+- **Corrections:** AI called the group "product details"; the editor calls it **Details**. AI sent you to an editor without first checking it was the development theme, and the live theme had no Care label; the editor is link [3] in `theme dev`'s output.
+
+**Outcome (accepted / changed / rejected):**

@@ -1235,5 +1235,22 @@
     "when_will_order_arrive": "When will I get my order?",
     "where_are_products_made": "Where are your products manufactured?",
     "disclosures": "Disclosures"
+  },
+  "pb_care_label": {
+    "name": "Care label",
+    "content": {
+      "data_source": "Shows the Plant care entry linked in the product's Care metafield (custom.care). Hidden on products without one."
+    },
+    "settings": {
+      "heading": "Heading",
+      "show_botanical_name": "Show botanical name",
+      "show_pet_safety": "Show pet safety"
+    },
+    "info": {
+      "pet_safety": "Shown only when Pet safety is filled in. Blank means it hasn't been checked."
+    },
+    "defaults": {
+      "heading": "Plant care"
+    }
   }
 }
