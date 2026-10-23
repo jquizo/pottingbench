@@ -147,6 +147,22 @@
               },
               "blocks": {}
             },
+            "pb_care_label_dXHzfy": {
+              "type": "pb-care-label",
+              "name": "t:pb_care_label.name",
+              "settings": {
+                "heading": "Plant care",
+                "show_botanical_name": true,
+                "show_pet_safety": true,
+                "background_color": "",
+                "text_color": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
@@ -380,6 +396,7 @@
             "text_WE3K4w",
             "reviews",
             "price_a7krng",
+            "pb_care_label_dXHzfy",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
             "accordion_Yd4U4w"
