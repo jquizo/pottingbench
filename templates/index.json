@@ -517,7 +517,7 @@
                 "text_rPLrH6": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Where live plants ship</p>",
+                    "text": "<h2>Where live plants ship</h2>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "center",
