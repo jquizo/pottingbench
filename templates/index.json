@@ -28,7 +28,7 @@
             "wrap": "pretty",
             "text_color": "{{ settings.color_palette.background }}",
             "background": true,
-            "background_color": "#00000004",
+            "background_color": "#00000005",
             "corner_radius": 0,
             "padding-block-start": 10,
             "padding-block-end": 10,
@@ -53,7 +53,7 @@
             "wrap": "pretty",
             "text_color": "{{ settings.color_palette.background }}",
             "background": true,
-            "background_color": "#7676726E",
+            "background_color": "#7676726e",
             "corner_radius": 4,
             "padding-block-start": 0,
             "padding-block-end": 0,
@@ -610,6 +610,21 @@
         "border_radius": 0,
         "padding-block-start": 40,
         "padding-block-end": 40
+      }
+    },
+    "divider_4LKGG8": {
+      "type": "divider",
+      "name": "t:names.divider_section",
+      "settings": {
+        "background_color": "",
+        "divider_color": "",
+        "section_width": "full-width",
+        "thickness": 1,
+        "corner_radius": "square",
+        "width_percent": 100,
+        "alignment_horizontal": "center",
+        "padding-block-start": 16,
+        "padding-block-end": 16
       }
     },
     "product_list_GNDmqA": {
@@ -1309,6 +1324,7 @@
   "order": [
     "hero_jmrDhh",
     "section_fLxX3D",
+    "divider_4LKGG8",
     "product_list_GNDmqA",
     "product_list_83eWQ9",
     "product_hotspots_RzCyE8",
