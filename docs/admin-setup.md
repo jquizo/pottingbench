@@ -10,8 +10,9 @@ Click-by-click steps to rebuild the Potting Bench dev store from this repo. Thes
 |---|---|
 | Metaobject and metafield definitions | Settings → Metafields and metaobjects. Metafield definitions are listed per resource (Products, Variants, …). Metaobject definitions are further down the same page. |
 | Metaobject entries | Content (left sidebar) → Metaobjects → Glaze → Add entry |
-| Theme editor | Online Store → Themes → Edit theme |
-| Add a block to the product page | Theme editor → page selector → **Products → Default product** → **Product information** → expand **Details** → **Add block** → category (for example **Product**). Checked 23 Oct 2026 on the development theme. |
+| Theme editor | Online Store → Themes → **Edit theme** on the **pottingbench/main** card |
+| Check you're in the live theme's editor | The top bar shows **pottingbench/main** with an **Active** label, and the address bar contains the theme ID `165097406723`. The development theme's editor says **Draft** instead. Checked 23 Oct 2026. |
+| Add a block to the product page | Theme editor → page selector → **Products → Default product** → **Product information** → expand **Details** → **Add block** → category (for example **Product**). Checked 23 Oct 2026 on the development theme and the live theme. |
 
 ## Store basics
 
@@ -376,7 +377,19 @@ Steps 22–24 are customiser saves on **pottingbench/main**: each commits to `ma
 
 **After the `feat/pb-care-label` pull request is merged.** The block exists on `main` only after the merge, so it won't be in the live theme's block list before then (README D17). The same steps were tested on the development theme on 23 Oct 2026.
 
-- [ ] **27. Add the Care label block.** Online Store → Themes → **pottingbench/main** → Customise → page selector → **Products → Default product** → **Product information** → expand **Details** → **Add block** → **Product** → **Care label**. Drag it between **Buy buttons** and **Accordion**. **Save.**
+- [x] **27. Add the Care label block.** (23 Oct 2026, commits `1a989c2` and `079cbed`; storefront checks passed 24 Oct 2026. The first save recorded the block under **Price**, so the second commit moved it below **Buy buttons**. Lesson: check `block_order` in the bot commit, not only the sidebar.) Online Store → Themes → **pottingbench/main** → **Edit theme** (check the **Active** label and theme ID, see [Confirmed admin paths](#confirmed-admin-paths)) → page selector → **Products → Default product** → **Product information** → expand **Details** → **Add block** → **Product** → **Care label**. Drag it between **Buy buttons** and **Accordion**. **Save.**
   - The preview opens on Bell Planter 15cm, which has no care entry, so it shows only the grey editor hint. That's expected; customers see nothing there.
   - Saving commits `templates/product.json` to `main` as `shopify[bot]` 2–10 minutes later. Check the commit adds one `pb-care-label` block inside `product-details` and changes nothing else you didn't expect, then `git switch main` and `git pull`.
   - Check on the storefront: Golden Pothos shows the Plant care heading, the botanical name and 5 rows; Parlour Palm shows "Non-toxic to cats and dogs"; Bell Planter 15cm shows nothing between Add to cart and the accordion.
+
+## Home page copy (customiser only)
+
+Replaces Dwell's placeholder copy. Wording is in [page-copy.md](page-copy.md#home-page). All saves were on **pottingbench/main** and committed to `main` as `shopify[bot]` (23–24 Oct 2026, commits `138f9b7` to `78059ca`). No code changes. Rich text heading levels are set in the text editor's toolbar *(control name not recorded)*; the block's **Typography preset** only changes the look (README D18).
+
+- [x] **28. Home sections.** (23 Oct 2026) Edit theme → page selector → **Home page** *(unsure of current UI)*. Final order: Hero, **Icons with text** (section preset, category **Text**), Divider, product lists for Indoor Plants, Pots & Planters and Potting Mix & Fertiliser (each heading is the collection title), the product hotspots with the heading **Our plants**, then the footer.
+  - Hero: heading and paragraph from page-copy.md; **Shop now** button unchanged.
+  - Icons with text: 3 cards from page-copy.md. Leave each icon's **Link** empty, so the icon stays decorative.
+  - Deleted: the "Elevated Essentials / Shop the look" and "From curated essentials…" sections, both collection lists (they had no collections chosen, so they showed placeholder cards), and the media-with-content section ("OUR BESTSELLING PRODUCT", a false claim, with no image).
+- [x] **29. Theme settings, your own choices.** (23 Oct 2026) Logo and favicon images, body text 16 px with loose line height, H1 type settings, primary buttons 8 px radius and default case. Footer: one block's top padding 12 → 0.
+- [x] **30. Heading levels.** (23 Oct 2026, commits `898b3ea`, `5e79425`, `c309c71`) Hero heading as **Heading 2** with the **H1** preset, because Horizon already prints a hidden `<h1>` with the shop name on Home (README D18). All 3 card headings as **Heading 2** with the **H3** preset. Sentence case.
+- [x] **31. Product page heading.** (24 Oct 2026, commit `78059ca`) Products → Default product → the **You might also like...** Text block → **You might also like**, italic off, still Heading 3. No `<em>` is left in the theme's JSON, so Fraunces italic shouldn't load.

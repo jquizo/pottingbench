@@ -13,6 +13,25 @@ Copy rules: see the README decision log and `CLAUDE.md`. Every page that describ
 | Password page heading *(not used: step 25 skipped)* | Potting Bench is a concept store | none |
 | Password page paragraph *(not used: step 25 skipped)* | It's not a real business and nothing is for sale. It's a Shopify theme portfolio project. | none |
 
+## Home page
+
+Customiser only (admin-setup steps 28–31). Every claim is something a reviewer can check on the site. No "Free shipping from $120" until that rate exists (`feat/cart-free-shipping`).
+
+| Where | Heading level · preset | Text |
+|---|---|---|
+| Hero heading | Heading 2 · H1 | Indoor plants & glazed planters |
+| Hero paragraph | Paragraph | Indoor plants with simple care guides, and ceramic planters in four glazes. |
+| Card 1 (icon `plant`) | Heading 2 · H3 | A care label on every plant |
+| Card 1 text | Paragraph | Light, water, humidity and difficulty, on each plant's page. |
+| Card 2 (icon `leaf`) | Heading 2 · H3 | Planters in four glazes |
+| Card 2 text | Paragraph | Celadon, tenmoku, terracotta and chalk, in bell and cylinder shapes. |
+| Card 3 (icon `map_pin`) | Heading 2 · H3 | Where live plants ship |
+| Card 3 text | Paragraph | Live plants ship everywhere in Australia except WA and Tasmania. |
+| Hotspots heading | Heading 2 · H2 | Our plants |
+| Product page, recommendations | Heading 3 | You might also like |
+
+Spare card, not used: icon `price_tag` · **Prices include GST** · Every price is in Australian dollars, with GST included.
+
 ## About page
 
 Title **About**, handle `about-us`.
