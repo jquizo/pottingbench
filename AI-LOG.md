@@ -326,3 +326,25 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - What Liquid returns for an unset metaobject field. Still untested (a blank Finish wasn't tried).
 
 **Outcome (accepted / changed / rejected):**
+
+---
+
+## 2026-10-24 · chore/readme-demo
+
+**What AI produced**
+
+- The README "View the demo" section: store link, how reviewers get the password (never in the repo), code access, five things to look at first, and what isn't built yet.
+- A fix to the README intro, which said "free shipping from $120" as if it existed (copy rule): it now says that rate and the WA/Tasmania notice aren't built yet.
+- Docs checked: [development stores](https://shopify.dev/docs/api/development-stores).
+
+**What I should verify**
+
+- [ ] The password wording suits how you send applications (AI chose "it's in my job application" because you didn't name a contact).
+- [ ] The 4 screenshots, still to take and add: Bell Planter 20cm in Tenmoku (desktop), Terracotta at 375 px, the Golden Pothos care label, the editor with Glaze accent selected.
+- [ ] Every link in the section opens the right page.
+
+**What AI was unsure about**
+
+- Whether the Shopify GitHub integration ignores `docs/images/`. It ignores `docs/` today, so it's expected to.
+
+**Outcome (accepted / changed / rejected):**

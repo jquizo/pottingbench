@@ -2,12 +2,30 @@
 
 > **Concept store, not a real business.** Built as a portfolio piece. Nothing here is for sale.
 
-Potting Bench sells indoor plants and glazed planters to Australian customers: AUD, GST-inclusive prices, free shipping from $120, and no live plants to WA or Tasmania. The selected planter glaze drives an accent colour on the product page. Plant care shows as nursery-tag-style rows.
+The brief: indoor plants and glazed planters for Australian customers, with AUD, GST-inclusive prices, free shipping from $120 and no live plants to WA or Tasmania (those last two aren't built yet). The selected planter glaze drives an accent colour on the product page. Plant care shows as nursery-tag-style rows.
 
 - Working agreement: [CLAUDE.md](CLAUDE.md)
 - Shopify's theme authoring guide (vendor file): [AGENTS.md](AGENTS.md)
 - Admin setup (rebuild the store from the repo): [docs/admin-setup.md](docs/admin-setup.md)
 - AI usage log: [AI-LOG.md](AI-LOG.md)
+
+## View the demo
+
+| | |
+|---|---|
+| Store | [potting-bench.myshopify.com](https://potting-bench.myshopify.com), a Shopify [development store](https://shopify.dev/docs/api/development-stores): always password-protected, and it can't take real orders |
+| Password | Not kept in this repo. It's in my job application; if you don't have it, ask the person who shared this repo with you. |
+| Code | This repo is private because of the Horizon licence (D5). Read access on request. |
+
+**Look at these first:**
+
+1. **Glaze accent** on [Bell Planter 20cm](https://potting-bench.myshopify.com/products/bell-planter-20cm): change the Colour to Tenmoku, then Chalk. The tag below the picker takes the glaze colour, with its text colour picked for contrast in Liquid (D19).
+2. **Care label** on [Golden Pothos](https://potting-bench.myshopify.com/products/golden-pothos): nursery-tag rows from a Plant care metaobject (D17).
+3. **GST labelling:** add anything to the cart; the drawer says "Includes GST" (D11).
+4. **Concept labelling:** the announcement bar and the footer (D15).
+5. **Code:** [blocks/pb-glaze-accent.liquid](blocks/pb-glaze-accent.liquid), [assets/pb-glaze-accent.js](assets/pb-glaze-accent.js), [blocks/pb-care-label.liquid](blocks/pb-care-label.liquid), the [decision log](#decision-log) and the Theme Check workflow in [.github/workflows/theme-check.yml](.github/workflows/theme-check.yml).
+
+**Not built yet:** the free-shipping rate and progress message, and the WA and Tasmania live-plant notice. Accepted gaps are listed under [Known issues](#known-issues).
 
 ## Base theme
 
