@@ -333,18 +333,21 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 
 **What AI produced**
 
-- The README "View the demo" section: store link, how reviewers get the password (never in the repo), code access, five things to look at first, and what isn't built yet.
+- The README "View the demo" section: store link, the storefront password, code access, five things to look at first, and what isn't built yet.
 - A fix to the README intro, which said "free shipping from $120" as if it existed (copy rule): it now says that rate and the WA/Tasmania notice aren't built yet.
-- Docs checked: [development stores](https://shopify.dev/docs/api/development-stores).
+- A new copy-rule finding, logged as a known issue: the About page also lists "free shipping from $120" as if it existed.
+- The answer that a dev store can't go public ("Dev stores are always password protected", "can't be converted to production stores"), so the password goes to reviewers instead.
+- Docs checked: [development stores](https://shopify.dev/docs/api/development-stores), [password page](https://help.shopify.com/en/manual/online-store/themes/password-page).
 
 **What I should verify**
 
-- [ ] The password wording suits how you send applications (AI chose "it's in my job application" because you didn't name a contact).
+- [x] Password wording: the password itself goes in the README (your choice, 24 Oct 2026). AI first kept it out of the repo; it changed its advice once you wanted anyone with the link to get in, since the store can't take orders and holds no customer data.
 - [ ] The 4 screenshots, still to take and add: Bell Planter 20cm in Tenmoku (desktop), Terracotta at 375 px, the Golden Pothos care label, the editor with Glaze accent selected.
 - [ ] Every link in the section opens the right page.
 
 **What AI was unsure about**
 
 - Whether the Shopify GitHub integration ignores `docs/images/`. It ignores `docs/` today, so it's expected to.
+- Whether a share preview link (`?preview_theme_id=…`) gets past the storefront password. Neither docs page says; not tested.
 
 **Outcome (accepted / changed / rejected):**

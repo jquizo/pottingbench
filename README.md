@@ -14,7 +14,7 @@ The brief: indoor plants and glazed planters for Australian customers, with AUD,
 | | |
 |---|---|
 | Store | [potting-bench.myshopify.com](https://potting-bench.myshopify.com), a Shopify [development store](https://shopify.dev/docs/api/development-stores): always password-protected, and it can't take real orders |
-| Password | Not kept in this repo. It's in my job application; if you don't have it, ask the person who shared this repo with you. |
+| Password | `geolyo`. It isn't a secret: the store can't take orders and holds no customer data. Shopify requires the password on every development store. |
 | Code | This repo is private because of the Horizon licence (D5). Read access on request. |
 
 **Look at these first:**
@@ -301,7 +301,7 @@ The images are uploaded as JPEG masters (about 2 MB each). Customers never downl
 Accepted for the concept demo. Image issues are listed in [docs/admin-setup.md](docs/admin-setup.md#catalogue-and-plant-care) (11c–11e).
 
 - **The footer newsletter signup collects real email addresses** for a store that doesn't trade. It stays for the demo. The password page template still has its signup (step 25 skipped: on a dev store the theme's password page doesn't control access).
-- **The shipping policy says "Free shipping from $120"** before the free-shipping rate exists. It arrives in `feat/cart-free-shipping`.
+- **The shipping policy and the About page say free shipping from $120** before the free-shipping rate exists (About: "What the project shows", [docs/page-copy.md](docs/page-copy.md#about-page)). The rate arrives in `feat/cart-free-shipping`.
 - **The variant dropdown's border is faint:** Theme settings → Variant pickers → Variant settings → Borders is `color3` (`#E9E4E0`), 1.18:1 on `#F7F7F5`. It probably still passes WCAG 1.4.11, because the caret and the selected value identify the control, but it's weak. Fix in the customiser (choose the `#767672` swatch) *(unsure of current UI)*. That setting also colours the borders of button-style variants.
 - **Checkbox borders** are the text colour at 35% opacity: 2.25:1 on `#F7F7F5`, below WCAG 1.4.11's 3:1. It's a Horizon CSS token (`--opacity-35-55`), so fixing it means overriding core.
 - **H1 at 88 px (24 Oct 2026) isn't checked on phones.** The Home hero heading uses the H1 preset; whether Horizon scales it down at 320 px wasn't confirmed in the code or on screen.
