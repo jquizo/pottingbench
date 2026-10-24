@@ -360,4 +360,4 @@ Notes on the after-runs:
 | Feature | Effect | Why |
 |---|---|---|
 | `feat/pb-care-label` | Expected no change, not measured (agreed) | Server-rendered text, no JavaScript, no new font files (botanical name not italic), about 1 KB of block CSS |
-| Home copy and theme settings (customiser, steps 28–31) | Expected: Fraunces italic (93 KiB) no longer loads on Home or product pages. Home: *to measure (1 run)* | No `<em>` left in the theme's JSON. Home's layout changed: new logo, 16 px body text, 3 product lists, Icons with text |
+| Home copy and theme settings (customiser, steps 28–31) | Expected: Fraunces italic (93 KiB) no longer loads on Home or product pages. Home: **not measured (skipped, your choice, demo scope)** | No `<em>` left in the theme's JSON. Home's layout changed: new logo, 16 px body text, 3 product lists, Icons with text |

@@ -282,7 +282,7 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 
 - [x] Each bot commit's diff was read before pulling (23–24 Oct 2026).
 - [x] Step 27 storefront checks: Golden Pothos, Parlour Palm, Bell Planter 15cm, and "You might also like" still a heading (24 Oct 2026).
-- [ ] Lighthouse on Home, 1 run: Fraunces italic gone from the font requests.
+- [ ] Lighthouse on Home, 1 run: **skipped (your choice, demo scope).** That Fraunces italic no longer loads is expected from the JSON, not measured.
 
 **What AI was unsure about**
 
