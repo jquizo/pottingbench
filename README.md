@@ -89,7 +89,7 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 |---|---|---|---|
 | `locales/en.default.json` | 5 `content.*` tax strings say "Includes GST" instead of "Taxes included" or "Duties and taxes included": `taxes_included`, `taxes_included_shipping_at_checkout_without_policy`, `taxes_included_shipping_at_checkout_with_policy_html`, `duties_and_taxes_included_shipping_at_checkout_without_policy_without_discounts`, `duties_and_taxes_included_shipping_at_checkout_with_policy_without_discounts_html` | Australian GST labelling. Horizon's cart shows the "duties" strings whenever the discount code field is on (`snippets/tax-info.liquid:32`, `:38`). On a Dwell update, keep our values for these 5 keys. See D11. | `feat/gst-labels` |
 | `snippets/variant-picker-styles.liquid` | The `:focus-visible` rule at `:52-56` moves from `.variant-option__select` to `.variant-option__select-wrapper:has(.variant-option__select:focus-visible)`, with a one-line comment | The wrapper's `overflow: clip` (`:34`) hid the dropdown's focus ring (WCAG 2.4.7). On a Dwell update, keep this selector unless Dwell has fixed the bug. See D14. | `fix/variant-select-focus` |
-| `locales/en.default.json`, `locales/en.default.schema.json` | A top-level `pb_care_label` group appended at the end of each file. No existing key changed. | Storefront and schema strings for the care label block. English files only (D16). On a Dwell update, keep the group if the end of the file conflicts. | `feat/pb-care-label` |
+| `locales/en.default.json`, `locales/en.default.schema.json` | Top-level `pb_care_label` and `pb_glaze_accent` groups appended at the end of each file. No existing key changed. | Storefront and schema strings for our blocks. English files only (D16). On a Dwell update, keep the groups if the end of the file conflicts. | `feat/pb-care-label`, `feat/pb-glaze-accent` |
 
 ## Decision log
 
@@ -251,6 +251,19 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 - **Decision:** hero heading **Heading 2** with the **H1** preset; Icons with text card headings **Heading 2** with the **H3** preset (admin-setup step 30).
 - **Reason:** one `<h1>` per page, a flat and consistent `<h2>` outline for screen-reader heading navigation, and no core edits. The store is password-protected, so there's no SEO effect either way.
 
+### D19. Glaze accent: text colour in Liquid, update by morphing Horizon's re-render
+
+- **Options:**
+  - text colour: Horizon's `contrast-override` snippet; our own pick in Liquid; or a text colour field on each Glaze entry;
+  - variant change: morph our tag from the page Horizon already fetches (`detail.html`); print every glaze as JSON and switch in JavaScript; or fetch the variant's metafields separately;
+  - script loading: a `<script>` tag inside the block, or a line in core `snippets/scripts.liquid`.
+- **Trade-offs:**
+  - `contrast-override` prints a `<style>` block outside the element, so the script would have to swap that too. It also picks the text colour by brightness first, which would give Terracotta (`#C4622D`) light text at 3.81:1. A text colour field depends on the merchant getting contrast right.
+  - JSON on the page avoids waiting for the fetch, but puts the glaze and contrast logic in JavaScript. A separate fetch doubles the requests. Morphing reuses Horizon's fetch and keeps all the logic in Liquid, but relies on Horizon's own `detail.html` and `productId` (typed in `assets/global.d.ts:105-108`, not part of Shopify's standard event), so a Dwell update could change them.
+  - A script tag in the block needs no core edit and loads only on glazed products, but a block added in the editor doesn't run its script until the preview reloads. Horizon's Buy buttons has the same limitation (`blocks/buy-buttons.liquid:261-264`).
+- **Decision:** Liquid compares the glaze with `settings.page_text_color` and `settings.page_background_color` using `color_contrast` and uses the higher one. Below 4.5:1 the tag falls back to page colours with a glaze square. `assets/pb-glaze-accent.js` listens for `shopify:product:select` and morphs the tag with the same block ID from `detail.html`. The script tag sits in the block.
+- **Reason:** contrast is checked against WCAG for any glaze a merchant adds, the tag is correct without JavaScript, and there are no core edits. A production merchant would more likely use native swatches on Shopify's standard Color option (D3), which Horizon's picker already renders, and keep a block like this only for extra glaze details.
+
 ### Spelling exceptions
 
 Our identifiers use Australian spelling. American spelling appears only where an external API requires it.
@@ -273,6 +286,7 @@ Accepted for the concept demo. Image issues are listed in [docs/admin-setup.md](
 - **The shipping policy says "Free shipping from $120"** before the free-shipping rate exists. It arrives in `feat/cart-free-shipping`.
 - **The variant dropdown's border is faint:** Theme settings → Variant pickers → Variant settings → Borders is `color3` (`#E9E4E0`), 1.18:1 on `#F7F7F5`. It probably still passes WCAG 1.4.11, because the caret and the selected value identify the control, but it's weak. Fix in the customiser (choose the `#767672` swatch) *(unsure of current UI)*. That setting also colours the borders of button-style variants.
 - **Checkbox borders** are the text colour at 35% opacity: 2.25:1 on `#F7F7F5`, below WCAG 1.4.11's 3:1. It's a Horizon CSS token (`--opacity-35-55`), so fixing it means overriding core.
+- **Glaze accent in the editor:** right after the block is added, changing the glaze doesn't update the tag until the preview is reloaded, because the editor inserts the block's `<script>` tag without running it. Customers aren't affected (D19).
 - **Two hard-coded `#ffffff` values** don't follow the palette: the product hotspot bullseye (`templates/index.json`) and a label background on the collections list page (`templates/list-collections.json`). White on `#F7F7F5` barely shows; text inside stays readable.
 
 ## Performance baseline
@@ -361,3 +375,4 @@ Notes on the after-runs:
 |---|---|---|
 | `feat/pb-care-label` | Expected no change, not measured (agreed) | Server-rendered text, no JavaScript, no new font files (botanical name not italic), about 1 KB of block CSS |
 | Home copy and theme settings (customiser, steps 28–31) | Expected: Fraunces italic (93 KiB) no longer loads on Home or product pages. Home: **not measured (skipped, your choice, demo scope)** | No `<em>` left in the theme's JSON. Home's layout changed: new logo, 16 px body text, 3 product lists, Icons with text |
+| `feat/pb-glaze-accent` | Expected no change, not measured | Planter pages only: one 1.5 KB module (module scripts are deferred, so it doesn't block rendering; `fetchpriority="low"`) and about 1.7 KB of block CSS. No extra request on variant change (it reuses Horizon's fetch). The tag is server-rendered, so no layout shift on load. |

@@ -290,3 +290,39 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - **Correction:** AI first read your sidebar report as the saved order; the bot commit showed Care label under Price. Lesson recorded in step 27: trust `block_order` in the commit.
 
 **Outcome (accepted / changed / rejected):**
+
+---
+
+## 2026-10-24 · feat/pb-glaze-accent
+
+**What AI produced**
+
+- A trace of Horizon's variant change: `<variant-picker>` dispatches `shopify:product:select` (`assets/variant-picker.js:318-333`), fetches the product URL with `option_values` and resolves the promise with the parsed page (`:390-399`). Other blocks update themselves from `detail.html` (`assets/product-inventory.js:23-41`). No Section Rendering API on the product page.
+- `blocks/pb-glaze-accent.liquid`: the glaze tag, the text colour chosen with `color_contrast` (README D19), a low-contrast fallback, the empty states, the CSS and the schema. Locale keys in the two English files.
+- `assets/pb-glaze-accent.js`: **you typed pieces 1–2** (imports, class shell, listener and clean-up); **AI wrote pieces 3–4** (event handling, morph, errors) at your request, with explanations.
+- Contrast, WCAG 2.x formula: Celadon 9.87:1, Tenmoku 13.50:1 (light text), Terracotta 4.61:1, Chalk 16.44:1.
+- Two improvements on Horizon's own code: a new `AbortController` on every connect (`media-gallery.js` creates one once), and `morph` with Horizon's default options (`product-inventory.js:41` replaces them).
+- D19, admin-setup step 32, the corrected step 13 data check, a known issue and the performance row.
+- Docs checked: [metafield](https://shopify.dev/docs/api/liquid/objects/metafield), [metaobject](https://shopify.dev/docs/api/liquid/objects/metaobject), [color](https://shopify.dev/docs/api/liquid/objects/color), [color_contrast](https://shopify.dev/docs/api/liquid/filters/color_contrast), [product](https://shopify.dev/docs/api/liquid/objects/product), [high-variant products](https://shopify.dev/docs/storefronts/themes/product-merchandising/variants/support-high-variant-products), [product select event](https://shopify.dev/docs/api/storefront-events-and-actions/events/product-select.md), [standard events](https://shopify.dev/docs/storefronts/themes/best-practices/standard-events), [editing variants](https://help.shopify.com/en/manual/products/variants/edit-variants).
+
+**What I should verify**
+
+- [x] Step 2: the block adds from its preset below Variant picker on the Draft theme, the Celadon tag renders, and the settings show (24 Oct 2026).
+- [x] Step 3: all four glazes update with the right fill and text on the share preview. In the editor it updates only after a preview reload (known issue).
+- [x] Step 4: all 3 planters show the tag; plants and supplies show nothing, with the hint in the editor only. **Found:** the 20cm and Cylinder variants had no Glaze linked; you linked them, and step 13 was corrected.
+- [x] Step 5: Label (changed, empty), Show finish, padding, reorder, remove and undo.
+- [x] Step 6: keyboard only: arrow keys and Alt+↓ then Enter change the glaze; Tab skips the tag; focus stays visible.
+- [x] Step 7: 375 px and 320 px, no sideways scrolling.
+- [ ] Step 8, DevTools contrast and console: **skipped (your choice, demo scope).** The ratios above are calculated, not measured on the page.
+- [x] Theme Check locally: 0 errors, 6 vendor warnings.
+- [ ] Theme Check in CI on the pull request.
+- [ ] Step 32 on the live theme after the merge.
+
+**What AI was unsure about**
+
+- Whether `option_values` sets `selected_or_first_available_variant`. The docs only imply it; it worked in testing.
+- Whether the editor runs a block's `<script>` when the block is added. Testing showed it doesn't until a reload.
+- **Corrections:** AI said Horizon's `detail` fields were untyped; they're typed in `assets/global.d.ts:105-108`. AI first planned `morph(…, { childrenOnly: true })`, which drops Horizon's default options. AI told you not to save in step 2 and guessed that was the editor problem; it wasn't.
+- What Liquid returns for an unset metaobject field. Still untested (a blank Finish wasn't tried).
+
+**Outcome (accepted / changed / rejected):**
