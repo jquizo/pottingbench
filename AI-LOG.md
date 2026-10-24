@@ -255,8 +255,8 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - [x] Test 7: 375 px and 320 px, no sideways scrolling.
 - [ ] Test 8, a blank Pet safety field: **skipped (your choice, demo scope).** The blank-value path in `snippets/pb-care-label-row.liquid` hasn't run.
 - [x] Theme Check locally: 0 errors, 6 vendor warnings.
-- [ ] Theme Check in CI on the pull request: 0 errors.
-- [ ] Step 27 after the merge.
+- [x] Theme Check in CI on the pull request (#8): 0 errors.
+- [x] Step 27 after the merge (23–24 Oct 2026, on the live theme). The first save put the block under Price; a second save moved it below Buy buttons.
 
 **What AI was unsure about**
 
@@ -265,5 +265,28 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - Editor UI: how to change the preview product (you found a way; not recorded), and that the development theme shows as "Draft".
 - Whether `127.0.0.1:9292` shows editor saves. Not tested; the share preview link was used instead.
 - **Corrections:** AI called the group "product details"; the editor calls it **Details**. AI sent you to an editor without first checking it was the development theme, and the live theme had no Care label; the editor is link [3] in `theme dev`'s output.
+
+**Outcome (accepted / changed / rejected):**
+
+## 2026-10-24 · Home copy (customiser) and `chore/docs-home-copy`
+
+**What AI produced**
+
+- An inventory of Dwell's placeholder copy, read from `templates/index.json`, `sections/footer-group.json` and `templates/product.json`. The footer had no placeholder text saved, so the README known issue was partly wrong.
+- Replacement copy for the hero and the Icons with text cards (docs/page-copy.md), checked against the copy rules. AI pushed back on "Handpicked and healthy": nothing is picked, and "healthy" reads as a promise about live goods.
+- A review of the 13 bot commits: two `<h1>`s on Home (Horizon prints a hidden one, `sections/header.liquid:387`) and a card heading saved as `<p>`. Both fixed in the customiser (README D18).
+- The explanation that the Text block's typography preset is only a CSS class (`snippets/text.liquid:57`), so heading levels and looks are separate.
+- Docs: admin-setup steps 28–31, step 27 ticked, the confirmed live-editor check (Active label, theme ID), D18, known issues and the performance row.
+
+**What I should verify**
+
+- [x] Each bot commit's diff was read before pulling (23–24 Oct 2026).
+- [x] Step 27 storefront checks: Golden Pothos, Parlour Palm, Bell Planter 15cm, and "You might also like" still a heading (24 Oct 2026).
+- [ ] Lighthouse on Home, 1 run: Fraunces italic gone from the font requests.
+
+**What AI was unsure about**
+
+- The rich text toolbar's heading-format control name (not recorded) and the Home page entry in the page selector (unconfirmed).
+- **Correction:** AI first read your sidebar report as the saved order; the bot commit showed Care label under Price. Lesson recorded in step 27: trust `block_order` in the commit.
 
 **Outcome (accepted / changed / rejected):**

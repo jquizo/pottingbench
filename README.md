@@ -244,6 +244,13 @@ Every edit to a vendor file is listed here so Dwell updates stay mergeable.
 - **Decision:** a `pb-care-label` block with a `pb-care-label-row` snippet, `<dl>` markup, colour through `contrast-override`, added in the customiser after the merge (step 27). The botanical name uses the heading font but isn't italic.
 - **Reason:** it follows Horizon's own block pattern (`blocks/sku.liquid:7` for `closest.product`, `blocks/_collection-info.liquid:4-8` for colour), keeps the merchant in control of placement, and avoids loading Fraunces italic (93 KiB).
 
+### D18. Home headings: Horizon's hidden `<h1>`, visible headings as `<h2>`
+
+- **Options:** make the hero heading the page's `<h1>`, or keep Horizon's visually hidden `<h1>` with the shop name (`sections/header.liquid:386-388`, Home only) and make the hero an `<h2>` styled with the H1 preset.
+- **Trade-offs:** a visible `<h1>` describes the page better, but with Horizon's hidden one the page would have two, and removing the hidden one means editing core `sections/header.liquid`. In Horizon the Text block's typography preset is only a CSS class (`snippets/text.liquid:57`); the tag comes from the rich text (line 101), so the look and the heading level can be set separately.
+- **Decision:** hero heading **Heading 2** with the **H1** preset; Icons with text card headings **Heading 2** with the **H3** preset (admin-setup step 30).
+- **Reason:** one `<h1>` per page, a flat and consistent `<h2>` outline for screen-reader heading navigation, and no core edits. The store is password-protected, so there's no SEO effect either way.
+
 ### Spelling exceptions
 
 Our identifiers use Australian spelling. American spelling appears only where an external API requires it.
@@ -262,12 +269,10 @@ The images are uploaded as JPEG masters (about 2 MB each). Customers never downl
 
 Accepted for the concept demo. Image issues are listed in [docs/admin-setup.md](docs/admin-setup.md#catalogue-and-plant-care) (11c–11e).
 
-- **Placeholder copy:** most home and footer text is Dwell's demo copy. The home hero's "unconditionally loved by our customers" breaks the copy rules (this store has no customers) and must go before anyone treats the site as real.
 - **The footer newsletter signup collects real email addresses** for a store that doesn't trade. It stays for the demo. The password page template still has its signup (step 25 skipped: on a dev store the theme's password page doesn't control access).
 - **The shipping policy says "Free shipping from $120"** before the free-shipping rate exists. It arrives in `feat/cart-free-shipping`.
 - **The variant dropdown's border is faint:** Theme settings → Variant pickers → Variant settings → Borders is `color3` (`#E9E4E0`), 1.18:1 on `#F7F7F5`. It probably still passes WCAG 1.4.11, because the caret and the selected value identify the control, but it's weak. Fix in the customiser (choose the `#767672` swatch) *(unsure of current UI)*. That setting also colours the borders of button-style variants.
 - **Checkbox borders** are the text colour at 35% opacity: 2.25:1 on `#F7F7F5`, below WCAG 1.4.11's 3:1. It's a Horizon CSS token (`--opacity-35-55`), so fixing it means overriding core.
-- **Italic headings in placeholder copy** (`<em>` in `templates/index.json` and in "You might also like..." in `templates/product.json`) make Home and product pages download Fraunces italic (93 KiB). Remove the italic in the customiser when that copy is replaced.
 - **Two hard-coded `#ffffff` values** don't follow the palette: the product hotspot bullseye (`templates/index.json`) and a label background on the collections list page (`templates/list-collections.json`). White on `#F7F7F5` barely shows; text inside stays readable.
 
 ## Performance baseline
@@ -355,3 +360,4 @@ Notes on the after-runs:
 | Feature | Effect | Why |
 |---|---|---|
 | `feat/pb-care-label` | Expected no change, not measured (agreed) | Server-rendered text, no JavaScript, no new font files (botanical name not italic), about 1 KB of block CSS |
+| Home copy and theme settings (customiser, steps 28–31) | Expected: Fraunces italic (93 KiB) no longer loads on Home or product pages. Home: *to measure (1 run)* | No `<em>` left in the theme's JSON. Home's layout changed: new logo, 16 px body text, 3 product lists, Icons with text |
