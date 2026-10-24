@@ -286,6 +286,7 @@ Accepted for the concept demo. Image issues are listed in [docs/admin-setup.md](
 - **The shipping policy says "Free shipping from $120"** before the free-shipping rate exists. It arrives in `feat/cart-free-shipping`.
 - **The variant dropdown's border is faint:** Theme settings → Variant pickers → Variant settings → Borders is `color3` (`#E9E4E0`), 1.18:1 on `#F7F7F5`. It probably still passes WCAG 1.4.11, because the caret and the selected value identify the control, but it's weak. Fix in the customiser (choose the `#767672` swatch) *(unsure of current UI)*. That setting also colours the borders of button-style variants.
 - **Checkbox borders** are the text colour at 35% opacity: 2.25:1 on `#F7F7F5`, below WCAG 1.4.11's 3:1. It's a Horizon CSS token (`--opacity-35-55`), so fixing it means overriding core.
+- **H1 at 88 px (24 Oct 2026) isn't checked on phones.** The Home hero heading uses the H1 preset; whether Horizon scales it down at 320 px wasn't confirmed in the code or on screen.
 - **Glaze accent in the editor:** right after the block is added, changing the glaze doesn't update the tag until the preview is reloaded, because the editor inserts the block's `<script>` tag without running it. Customers aren't affected (D19).
 - **Two hard-coded `#ffffff` values** don't follow the palette: the product hotspot bullseye (`templates/index.json`) and a label background on the collections list page (`templates/list-collections.json`). White on `#F7F7F5` barely shows; text inside stays readable.
 
