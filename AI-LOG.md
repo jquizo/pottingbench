@@ -315,8 +315,8 @@ One entry per feature. AI tool: Claude (Claude Code). I review and decide; the "
 - [x] Step 7: 375 px and 320 px, no sideways scrolling.
 - [ ] Step 8, DevTools contrast and console: **skipped (your choice, demo scope).** The ratios above are calculated, not measured on the page.
 - [x] Theme Check locally: 0 errors, 6 vendor warnings.
-- [ ] Theme Check in CI on the pull request.
-- [ ] Step 32 on the live theme after the merge.
+- [x] Theme Check in CI on the pull request (#10).
+- [x] Step 32 on the live theme after the merge (24 Oct 2026): the tag follows the dropdown on all 3 planters, Tenmoku has light text, and plants and supplies show nothing.
 
 **What AI was unsure about**
 
