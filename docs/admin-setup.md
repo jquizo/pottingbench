@@ -304,7 +304,7 @@ The collection template shows only the title. To show the description, open Onli
 ### 13. Data checks and baseline
 
 - [x] Each of the 5 plants has Care set and Live plant True. The other 5 products have Live plant False. None is blank. (19 Oct 2026)
-- [x] Every planter variant has a Glaze, matching its Colour value. (19 Oct 2026)
+- [x] Every planter variant has a Glaze, matching its Colour value. (19 Oct 2026; **corrected 24 Oct 2026:** only Bell Planter 15cm's variants had one. Bell Planter 20cm and Cylinder Planter 12cm were linked during `feat/pb-glaze-accent` testing.) Quick check: with the Glaze accent block on the product template, a planter that shows the editor hint "link a Glaze entry…" has no Glaze on any variant.
 - [x] Each collection shows the right products: 5 plants, 3 planters, 2 mix and fertiliser, in admin and on the storefront. (19 Oct 2026)
 - [x] Test cart **$119.95**: Bell Planter 20cm + Snake Plant + Indoor Potting Mix 5L. (19 Oct 2026)
 - [x] Test cart **$120.00**: Bell Planter 15cm + Snake Plant + Parlour Palm. (19 Oct 2026)
