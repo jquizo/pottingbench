@@ -304,7 +304,7 @@ The collection template shows only the title. To show the description, open Onli
 ### 13. Data checks and baseline
 
 - [x] Each of the 5 plants has Care set and Live plant True. The other 5 products have Live plant False. None is blank. (19 Oct 2026)
-- [x] Every planter variant has a Glaze, matching its Colour value. (19 Oct 2026)
+- [x] Every planter variant has a Glaze, matching its Colour value. (19 Oct 2026; **corrected 24 Oct 2026:** only Bell Planter 15cm's variants had one. Bell Planter 20cm and Cylinder Planter 12cm were linked during `feat/pb-glaze-accent` testing.) Quick check: with the Glaze accent block on the product template, a planter that shows the editor hint "link a Glaze entry…" has no Glaze on any variant.
 - [x] Each collection shows the right products: 5 plants, 3 planters, 2 mix and fertiliser, in admin and on the storefront. (19 Oct 2026)
 - [x] Test cart **$119.95**: Bell Planter 20cm + Snake Plant + Indoor Potting Mix 5L. (19 Oct 2026)
 - [x] Test cart **$120.00**: Bell Planter 15cm + Snake Plant + Parlour Palm. (19 Oct 2026)
@@ -393,3 +393,12 @@ Replaces Dwell's placeholder copy. Wording is in [page-copy.md](page-copy.md#hom
 - [x] **29. Theme settings, your own choices.** (23 Oct 2026) Logo and favicon images, body text 16 px with loose line height, H1 type settings, primary buttons 8 px radius and default case. Footer: one block's top padding 12 → 0.
 - [x] **30. Heading levels.** (23 Oct 2026, commits `898b3ea`, `5e79425`, `c309c71`) Hero heading as **Heading 2** with the **H1** preset, because Horizon already prints a hidden `<h1>` with the shop name on Home (README D18). All 3 card headings as **Heading 2** with the **H3** preset. Sentence case.
 - [x] **31. Product page heading.** (24 Oct 2026, commit `78059ca`) Products → Default product → the **You might also like...** Text block → **You might also like**, italic off, still Heading 3. No `<em>` is left in the theme's JSON, so Fraunces italic shouldn't load.
+
+## Glaze accent (`feat/pb-glaze-accent`)
+
+**After the `feat/pb-glaze-accent` pull request is merged** (README D19). The same steps were tested on the development theme on 24 Oct 2026.
+
+- [ ] **32. Add the Glaze accent block.** Edit theme on **pottingbench/main** (check the **Active** label and theme ID, see [Confirmed admin paths](#confirmed-admin-paths)) → page selector → **Products → Default product** → **Product information** → expand **Details** → **Add block** → **Product** → **Glaze accent**. Drag it directly below **Variant picker**. **Save.**
+  - The preview opens on Bell Planter 15cm, so the tag shows straight away. Right after adding, changing the glaze in the editor doesn't update the tag until the preview is reloaded (README known issues). Customers aren't affected.
+  - Saving commits `templates/product.json` to `main` as `shopify[bot]`. Check the commit adds one `pb-glaze-accent` block inside `product-details`, directly after the variant picker in `block_order`, then `git switch main` and `git pull`.
+  - Check on the storefront: on all 3 planters the tag follows the Colour dropdown (Tenmoku has light text, the others near-black); plants and supplies show nothing.

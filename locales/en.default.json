@@ -381,5 +381,9 @@
       "difficulty": "Difficulty"
     },
     "editor_hint": "Care label: link a Plant care entry in this product's Care metafield to show it. Customers see nothing here."
+  },
+  "pb_glaze_accent": {
+    "editor_hint": "Glaze accent: link a Glaze entry in each variant's Glaze metafield to show it. Customers see nothing here.",
+    "low_contrast_hint": "{{ glaze }} doesn't reach 4.5:1 contrast with the page text or background colour, so customers see a colour square instead of a filled tag."
   }
 }

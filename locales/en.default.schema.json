@@ -1252,5 +1252,18 @@
     "defaults": {
       "heading": "Plant care"
     }
+  },
+  "pb_glaze_accent": {
+    "name": "Glaze accent",
+    "content": {
+      "data_source": "Shows the Glaze entry linked in the selected variant's Glaze metafield (custom.glaze), filled with its colour. The text colour is picked automatically for contrast. Hidden on products without glazes."
+    },
+    "settings": {
+      "label": "Label",
+      "show_finish": "Show finish"
+    },
+    "defaults": {
+      "label": "Glaze"
+    }
   }
 }

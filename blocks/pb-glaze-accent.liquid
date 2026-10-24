@@ -1,0 +1,220 @@
+{%- liquid
+  assign block_settings = block.settings
+  assign product_resource = closest.product
+  assign selected_variant = product_resource.selected_or_first_available_variant
+
+  for variant in product_resource.variants
+    if variant.metafields.custom.glaze.value != blank
+      assign product_has_glaze = true
+      break
+    endif
+  endfor
+
+  assign glaze = selected_variant.metafields.custom.glaze.value
+  assign glaze_name = glaze.name.value
+  assign glaze_colour = glaze.colour.value
+  assign glaze_finish = glaze.finish.value
+
+  if glaze_name != blank and glaze_colour != blank and glaze_colour.alpha != 0
+    assign show_glaze = true
+
+    # WCAG 2.2 AA minimum for normal-size text
+    assign min_text_contrast = 4.5
+    assign page_text_contrast = glaze_colour | color_contrast: settings.page_text_color
+    assign page_background_contrast = glaze_colour | color_contrast: settings.page_background_color
+
+    # Pick whichever page colour contrasts more with the glaze, not a brightness guess
+    if page_text_contrast >= page_background_contrast
+      assign glaze_text_colour = settings.page_text_color
+      assign best_contrast = page_text_contrast
+    else
+      assign glaze_text_colour = settings.page_background_color
+      assign best_contrast = page_background_contrast
+    endif
+
+    if best_contrast < min_text_contrast
+      assign low_contrast = true
+    endif
+  endif
+-%}
+
+{%- if product_has_glaze -%}
+  <script
+    src="{{ 'pb-glaze-accent.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+
+  {% # The host stays in the DOM so the script can fill it when a variant without a glaze changes to one with a glaze %}
+  <pb-glaze-accent
+    id="PbGlazeAccent-{{ block.id }}"
+    class="spacing-style"
+    style="{% render 'spacing-style', settings: block_settings %}"
+    data-product-id="{{ product_resource.id }}"
+    {{ block.shopify_attributes }}
+  >
+    {%- if show_glaze -%}
+      <p
+        class="pb-glaze-accent{% if low_contrast %} pb-glaze-accent--low-contrast{% endif %}"
+        style="--pb-glaze: {{ glaze_colour }}; --pb-glaze-text: {{ glaze_text_colour }};"
+      >
+        {%- if low_contrast -%}
+          <span class="pb-glaze-accent__swatch" aria-hidden="true"></span>
+        {%- endif -%}
+        {%- if block_settings.label != blank -%}
+          <span class="pb-glaze-accent__label">{{ block_settings.label | escape }}</span>
+        {%- endif -%}
+        <span class="pb-glaze-accent__value">
+          {{- glaze_name | escape -}}
+          {%- if block_settings.show_finish and glaze_finish != blank -%}
+            <span aria-hidden="true"> · </span>
+            {{- glaze_finish | escape -}}
+          {%- endif -%}
+        </span>
+      </p>
+      {%- if low_contrast and request.design_mode -%}
+        <p class="pb-glaze-accent__hint">{{ 'pb_glaze_accent.low_contrast_hint' | t: glaze: glaze_name }}</p>
+      {%- endif -%}
+    {%- else -%}
+      <p class="pb-glaze-accent" hidden></p>
+    {%- endif -%}
+  </pb-glaze-accent>
+{%- elsif request.design_mode -%}
+  {% # Editor-only hint: plants and supplies have no Glaze on their variants, so customers see nothing %}
+  <p class="pb-glaze-accent__hint" {{ block.shopify_attributes }}>
+    {{ 'pb_glaze_accent.editor_hint' | t }}
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  pb-glaze-accent {
+    display: block;
+  }
+
+  /* No glaze on the selected variant: drop the host too, so the parent's gap doesn't leave a hole */
+  pb-glaze-accent:has(> .pb-glaze-accent[hidden]) {
+    display: none;
+  }
+
+  /* Glaze tag: filled with the glaze, text in the page colour with the higher contrast */
+  .pb-glaze-accent {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--gap-xs);
+    margin: 0;
+    padding-block: var(--padding-xs);
+    padding-inline: var(--padding-sm);
+    color: var(--pb-glaze-text);
+    background-color: var(--pb-glaze);
+    border: var(--style-border-width) solid rgb(var(--color-foreground-rgb) / var(--opacity-20));
+    border-radius: var(--style-border-radius-xs);
+  }
+
+  .pb-glaze-accent[hidden] {
+    display: none;
+  }
+
+  .pb-glaze-accent__label {
+    font-family: var(--font-accent--family);
+    font-size: var(--font-size--2xs);
+    letter-spacing: var(--letter-spacing-sm);
+    text-transform: uppercase;
+  }
+
+  /* Neither page colour reaches 4.5:1 on this glaze: keep page colours and show the glaze as a square */
+  .pb-glaze-accent--low-contrast {
+    align-items: center;
+    color: var(--color-foreground);
+    background-color: transparent;
+  }
+
+  .pb-glaze-accent__swatch {
+    inline-size: 1em;
+    block-size: 1em;
+    background-color: var(--pb-glaze);
+    border: var(--style-border-width) solid rgb(var(--color-foreground-rgb) / var(--opacity-20));
+    border-radius: var(--style-border-radius-xs);
+  }
+
+  .pb-glaze-accent__hint {
+    margin: 0;
+    font-size: var(--font-size--sm);
+    color: var(--color-foreground-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:pb_glaze_accent.name",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:pb_glaze_accent.content.data_source"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:pb_glaze_accent.settings.label",
+      "default": "t:pb_glaze_accent.defaults.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_finish",
+      "label": "t:pb_glaze_accent.settings.show_finish",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:pb_glaze_accent.name",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}
