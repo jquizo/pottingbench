@@ -196,7 +196,7 @@ For every product:
 
 **Variant options:** plain-text custom options only. Click **+ Add options like size or color** → Option name → Option values → **Done** → **Save**, then set price and stock on each variant ([Help Center](https://help.shopify.com/en/manual/products/variants/add-variants)). The first value is the default variant.
 
-**Plants:** product type `Indoor plant`. Live plant **True**, and choose the matching **Care** entry.
+**Plants:** product type `Indoor Plant`. Live plant **True**, and choose the matching **Care** entry.
 
 | Title | Handle | Option | Variants and prices | Description |
 |---|---|---|---|---|
@@ -214,7 +214,7 @@ For every product:
 | Bell Planter 20cm | `bell-planter-20cm` | Celadon · Tenmoku · Terracotta · Chalk | $59 | A glazed ceramic bell planter, 20cm, in four glazes. |
 | Cylinder Planter 12cm | `cylinder-planter-12cm` | Celadon · Chalk | $29 | A glazed ceramic cylinder planter, 12cm, in two glazes. |
 
-**Potting mix and fertiliser:** product type `Potting mix & fertiliser`. Live plant **False**.
+**Potting mix and fertiliser:** product type `Potting mix & Fertiliser`. Live plant **False**.
 
 | Title | Handle | Price | Description |
 |---|---|---|---|
@@ -240,9 +240,9 @@ The store is password-protected, so the SEO work is practice only.
 
 | Title | Handle | Product type | Description |
 |---|---|---|---|
-| Indoor Plants | `indoor-plants` | `Indoor plant` | Easy-care indoor plants, each with a simple care guide. Live plants can't be sent to WA or Tasmania. |
+| Indoor Plants | `indoor-plants` | `Indoor Plant` | Easy-care indoor plants, each with a simple care guide. Live plants can't be sent to WA or Tasmania. |
 | Pots & Planters | `pots-planters` | `Pot` | Glazed ceramic planters in celadon, tenmoku, terracotta and chalk. |
-| Potting Mix & Fertiliser | `potting-mix-fertiliser` | `Potting mix & fertiliser` | Potting mix and liquid plant food for indoor plants. |
+| Potting Mix & Fertiliser | `potting-mix-fertiliser` | `Potting mix & Fertiliser` | Potting mix and liquid plant food for indoor plants. |
 
 | Collection | SEO title | Meta description |
 |---|---|---|
@@ -308,6 +308,10 @@ The collection template shows only the title. To show the description, open Onli
 - [x] Each collection shows the right products: 5 plants, 3 planters, 2 mix and fertiliser, in admin and on the storefront. (19 Oct 2026)
 - [x] Test cart **$119.95**: Bell Planter 20cm + Snake Plant + Indoor Potting Mix 5L. (19 Oct 2026)
 - [x] Test cart **$120.00**: Bell Planter 15cm + Snake Plant + Parlour Palm. (19 Oct 2026)
+- [x] **Product CSV export check** (exported 29 Oct 2026, fixed 31 Oct 2026):
+  - **Product types** in the store are `Indoor Plant`, `Pot` and `Potting mix & Fertiliser`. The tables above used to say `Indoor plant` and `Potting mix & fertiliser`; they now match the store. Each collection's condition casing wasn't checked, and the collections show the right products.
+  - **Bell Planter 15cm had a blank Type**, yet Pots & Planters (condition: Type is equal to `Pot`) still listed it, with nothing marking it as hand-picked. Type set to `Pot` in admin. Cause unknown.
+  - **Bell Planter 20cm Tenmoku alt text** said "15cm". Fixed in admin to "20cm glazed ceramic bell planter in a dark brown gloss tenmoku colour."
 - [x] Lighthouse mobile, same conditions as the README baseline: `/`, `/products/golden-pothos`, `/products/bell-planter-20cm` and `/collections/all`. Results recorded in the README as baseline v2. (19 Oct 2026)
 
 Later branches add the $120 free-shipping rate and the WA and Tasmania shipping zones.

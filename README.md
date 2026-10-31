@@ -76,7 +76,7 @@ Before any pull: run `git status`, check you're on the branch you expect, and th
 | Metaobject | Plant care (`plant_care`) | `botanical_name` single line text (required); `light`, `water`, `humidity`, `difficulty` single line text limited to fixed values by regex validation (required); `pet_safe` single line text with the same kind of regex validation (optional: blank means unknown) | `pb-care-label` | Created |
 | Product metafield | `custom.care` | Metaobject reference → Plant care, one entry | `pb-care-label` | Created |
 | Product metafield | `custom.live_plant` | True or false. True on plants, False on everything else, set explicitly (blank = not reviewed; the theme treats it as false). | `cart-live-plant-notice` | Created |
-| Product type | `Indoor plant`, `Pot`, `Potting mix & fertiliser` | Drives the 3 automated collections | Collections | Created |
+| Product type | `Indoor Plant`, `Pot`, `Potting mix & Fertiliser` | Drives the 3 automated collections | Collections | Created |
 | Collections | `indoor-plants`, `pots-planters`, `potting-mix-fertiliser` | Condition: Type is equal to … (new collections model) | Navigation, collection pages | Created |
 
 Values and the full catalogue are in [docs/admin-setup.md](docs/admin-setup.md#catalogue-and-plant-care).
