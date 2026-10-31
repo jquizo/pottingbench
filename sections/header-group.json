@@ -27,10 +27,26 @@
             "text_color": ""
           },
           "blocks": {}
+        },
+        "announcement_qyXxwK": {
+          "type": "_announcement",
+          "name": "t:names.announcement",
+          "settings": {
+            "text": "Free Shipping over $99",
+            "link": "",
+            "font": "var(--font-subheading--family)",
+            "font_size": "0.75rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none",
+            "text_color": ""
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "announcement_KMAGKG"
+        "announcement_KMAGKG",
+        "announcement_qyXxwK"
       ],
       "name": "t:names.announcement_bar",
       "settings": {
