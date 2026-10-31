@@ -32,7 +32,7 @@
           "type": "_announcement",
           "name": "t:names.announcement",
           "settings": {
-            "text": "Free Shipping over $99",
+            "text": "Free Shipping over $120",
             "link": "",
             "font": "var(--font-subheading--family)",
             "font_size": "0.75rem",
